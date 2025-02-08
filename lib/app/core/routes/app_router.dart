@@ -1,0 +1,36 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:salon_management/app/core/resources/pref_resources.dart';
+import 'package:salon_management/app/core/routes/app_router.gr.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+@AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
+class AppRouter extends RootStackRouter {
+  @override
+  RouteType get defaultRouteType => RouteType.adaptive();
+
+  @override
+  List<AutoRoute> get routes => [
+        AutoRoute(page: SplashRoute.page, initial: true, path: splashScreen),
+        AutoRoute(
+            page: HomeRoute.page, path: homeScreen, guards: [AuthGuard()]),
+        AutoRoute(page: LoginRoute.page, path: loginScreen),
+      ];
+
+  static const String splashScreen = "/splash";
+  static const String homeScreen = "/home";
+  static const String loginScreen = "/login";
+}
+
+class AuthGuard extends AutoRouteGuard {
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) async {
+    final prefs = await SharedPreferences.getInstance();
+    final isAuthenticated =
+        prefs.getBool(PrefResources.isAuthenticated) ?? false;
+    if (isAuthenticated) {
+      resolver.next();
+    } else {
+      router.replaceNamed(AppRouter.loginScreen);
+    }
+  }
+}
