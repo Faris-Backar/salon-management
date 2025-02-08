@@ -27,4 +27,11 @@ class AppStrings {
   static const String enterValidEmail = "Enter a valid email address";
   static const String successLogin = "Authenitcation Successfull";
   static const String successSignup = "User Creation Successfull";
+  static const String icon = "icon";
+  static const String path = "path";
+  static const String home = "Home";
+  static const String employees = "Employees";
+  static const String reports = "Reports";
+  static const String settings = "Settings";
+  static const String indianRupee = '\u{20B9}';
 }
