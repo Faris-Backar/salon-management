@@ -1,8 +1,10 @@
 // sidebar_widget.dart
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/core/routes/app_router.dart';
 import 'package:salon_management/gen/assets.gen.dart';
 
 class SidebarWidget extends StatefulWidget {
@@ -27,17 +29,17 @@ class _SidebarState extends State<SidebarWidget> {
     {
       AppStrings.icon: Icons.home_rounded,
       AppStrings.title: AppStrings.home,
-      // AppStrings.path: PageResources.homeNested
+      AppStrings.path: AppRouter.homeScreen,
     },
     {
       AppStrings.icon: Icons.school_rounded,
       AppStrings.title: AppStrings.employees,
-      // AppStrings.path: PageResources.students
+      AppStrings.path: AppRouter.employeeScreen,
     },
     {
       AppStrings.icon: Icons.campaign_rounded,
       AppStrings.title: AppStrings.reports,
-      // AppStrings.path: PageResources.campaign
+      AppStrings.path: AppRouter.employeeScreen,
     },
     // {
     //   AppStrings.icon: Icons.settings,
@@ -47,7 +49,7 @@ class _SidebarState extends State<SidebarWidget> {
     {
       AppStrings.icon: Icons.settings_rounded,
       AppStrings.title: AppStrings.settings,
-      // AppStrings.route: PageResources.settings
+      AppStrings.path: AppRouter.employeeScreen,
     },
   ];
 
@@ -75,6 +77,7 @@ class _SidebarState extends State<SidebarWidget> {
                   setState(() {
                     selectedIndex = index;
                   });
+                  context.router.pushNamed(options[index][AppStrings.path]);
                 },
                 child: Container(
                   width: double.infinity,

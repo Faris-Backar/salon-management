@@ -11,14 +11,37 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: SplashRoute.page, initial: true, path: splashScreen),
-        AutoRoute(
-            page: HomeRoute.page, path: homeScreen, guards: [AuthGuard()]),
         AutoRoute(page: LoginRoute.page, path: loginScreen),
+        AutoRoute(
+          page: DashboardRoute.page,
+          path: dashBoardScreen,
+          guards: [AuthGuard()],
+          children: [
+            AutoRoute(
+              page: HomeRoute.page,
+              path: homeScreen,
+            ),
+            AutoRoute(
+              page: EmployeeRoute.page,
+              path: homeScreen,
+            ),
+            AutoRoute(
+              page: EmployeeRoute.page,
+              path: homeScreen,
+            ),
+            AutoRoute(
+              page: EmployeeRoute.page,
+              path: homeScreen,
+            ),
+          ],
+        ),
       ];
 
   static const String splashScreen = "/splash";
-  static const String homeScreen = "/home";
+  static const String homeScreen = "home";
   static const String loginScreen = "/login";
+  static const String dashBoardScreen = "/dashboard";
+  static const String employeeScreen = "employee";
 }
 
 class AuthGuard extends AutoRouteGuard {
