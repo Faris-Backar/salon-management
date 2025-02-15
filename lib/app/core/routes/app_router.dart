@@ -26,6 +26,10 @@ class AppRouter extends RootStackRouter {
               path: employeeScreen,
             ),
             AutoRoute(
+              page: CustomerRoute.page,
+              path: customerScreen,
+            ),
+            AutoRoute(
               page: EmployeeRoute.page,
               path: employeeScreen,
             ),
@@ -42,6 +46,7 @@ class AppRouter extends RootStackRouter {
   static const String loginScreen = "/login";
   static const String dashBoardScreen = "/dashboard";
   static const String employeeScreen = "employee";
+  static const String customerScreen = "customer";
 }
 
 class AuthGuard extends AutoRouteGuard {
