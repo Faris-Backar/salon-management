@@ -2,5 +2,6 @@ class FirebaseResources {
   FirebaseResources._();
 
   static const String employee = "employee";
-  static const String customer = "employee";
+  static const String customer = "customer";
+  static const String serviceItem = "serviceItem";
 }
