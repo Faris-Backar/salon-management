@@ -34,4 +34,12 @@ class AppStrings {
   static const String reports = "Reports";
   static const String settings = "Settings";
   static const String indianRupee = '\u{20B9}';
+  static const String fullName = "Full Name";
+  static const String mobileNumber = "Mobile Number";
+  static const String currentAddress = "Current Address";
+  static const String permanentAddress = "Permanent Address";
+  static const String specialisedService = "Specialised Service";
+  static const String createEmployee = "Create Employee";
+  static const String viewEmployees = "View Employees";
+  static const String employeeCreatedSuccess = "Employee created successfull";
 }

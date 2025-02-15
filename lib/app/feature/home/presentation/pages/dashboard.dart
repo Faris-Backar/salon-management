@@ -34,12 +34,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: isDesktop ? null : _buildAppBar(isDesktop),
-      drawer: isDesktop ? null : Drawer(child: _buildSidebar(true)),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isDesktop) _buildSidebarWithExpansion(),
+          if (!Responsive.isMobile()) _buildSidebarWithExpansion(),
           Expanded(
             flex: isDesktop ? 7 : 1,
             child: Column(
@@ -60,18 +58,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       valueListenable: sideBarExpansionNotifier,
       builder: (context, isExpanded, child) {
         return SidebarWidget(
-          isExpanded: isExpanded,
+          isExpanded: Responsive.isTablet() ? false : isExpanded,
           onToggleExpand: _toggleSidebarExpansion,
         );
       },
-    );
-  }
-
-  /// Sidebar widget logic
-  Widget _buildSidebar(bool isExpanded) {
-    return SidebarWidget(
-      isExpanded: isExpanded,
-      onToggleExpand: () {},
     );
   }
 

@@ -2,9 +2,11 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/core/routes/app_router.dart';
+import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/gen/assets.gen.dart';
 
 class SidebarWidget extends StatefulWidget {
@@ -57,12 +59,22 @@ class _SidebarState extends State<SidebarWidget> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: widget.isExpanded ? 200 : 80,
+      width: widget.isExpanded
+          ? Responsive.isMobile()
+              ? 0.7.sw
+              : 200
+          : Responsive.isTablet()
+              ? 50
+              : 80,
+      color: context.colorScheme.surfaceDim,
       child: Column(
         children: [
-          DrawerHeader(
-            padding: EdgeInsets.zero,
-            child: Image.asset(Assets.images.logo.path),
+          GestureDetector(
+            onTap: widget.onToggleExpand,
+            child: DrawerHeader(
+              padding: EdgeInsets.zero,
+              child: Image.asset(Assets.images.logo.path),
+            ),
           ),
           const SizedBox(height: 10),
           ...List.generate(options.length, (index) {
@@ -81,10 +93,7 @@ class _SidebarState extends State<SidebarWidget> {
                 },
                 child: Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 8,
-                  ),
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isSelected
@@ -94,7 +103,9 @@ class _SidebarState extends State<SidebarWidget> {
                             : Colors.transparent,
                     borderRadius: BorderRadius.circular(5),
                   ),
+                  alignment: Alignment.center,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         options[index][AppStrings.icon],

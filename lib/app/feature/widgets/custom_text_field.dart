@@ -8,9 +8,11 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final bool? passwordvisibility;
   final String? hint;
-  final String? Function(String?)? validator;
+  final String? Function(String? value)? validator;
   final TextInputAction? textInputAction;
   final TextInputType? textInputType;
+  final int maxLines;
+  final bool enabled;
   const CustomTextField(
       {super.key,
       required this.label,
@@ -20,7 +22,9 @@ class CustomTextField extends StatelessWidget {
       this.hint,
       this.textInputAction,
       this.validator,
-      this.textInputType});
+      this.textInputType,
+      this.maxLines = 1,
+      this.enabled = true});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +34,7 @@ class CustomTextField extends StatelessWidget {
         Text(label),
         const SizedBox(height: 5),
         TextInputFormField(
+          enabled: enabled,
           controller: controller,
           suffixIcon: suffixIcon,
           isPasswordVisible: passwordvisibility,
@@ -39,7 +44,10 @@ class CustomTextField extends StatelessWidget {
           textInputAction: textInputAction,
           validator: validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          maxLines: 1,
+          maxLines: maxLines,
+          contentPadding: maxLines != 1
+              ? EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0)
+              : null,
           style: context.textTheme.labelLarge
               ?.copyWith(color: context.colorScheme.onSurface),
           textInputType: textInputType,

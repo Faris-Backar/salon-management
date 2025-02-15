@@ -21,7 +21,8 @@ class TextInputFormField extends StatelessWidget {
       this.cursorColor,
       this.maxLines,
       this.autovalidateMode,
-      this.onFieldSubmitted});
+      this.onFieldSubmitted,
+      this.enabled = true});
   final String? hint;
   final TextEditingController controller;
   final Widget? prefixIcon;
@@ -40,10 +41,12 @@ class TextInputFormField extends StatelessWidget {
   final int? maxLines;
   final AutovalidateMode? autovalidateMode;
   final Function(String)? onFieldSubmitted;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled,
       obscureText: isPasswordVisible ?? false,
       controller: controller,
       textInputAction: textInputAction,

@@ -16,7 +16,7 @@ class SalonManagementApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routerConfig: _appRouter.config(),
           theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
+          // darkTheme: AppTheme.dark,
         );
       },
     );

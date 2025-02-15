@@ -23,15 +23,15 @@ class AppRouter extends RootStackRouter {
             ),
             AutoRoute(
               page: EmployeeRoute.page,
-              path: homeScreen,
+              path: employeeScreen,
             ),
             AutoRoute(
               page: EmployeeRoute.page,
-              path: homeScreen,
+              path: employeeScreen,
             ),
             AutoRoute(
               page: EmployeeRoute.page,
-              path: homeScreen,
+              path: employeeScreen,
             ),
           ],
         ),

@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:salon_management/app/core/app_strings.dart';
+import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/bill_section.dart';
+import 'package:salon_management/app/feature/home/presentation/widgets/side_bar_widget.dart';
 import 'package:salon_management/gen/assets.gen.dart';
 
 @RoutePage()
@@ -164,95 +166,112 @@ class HomeScreen extends StatelessWidget {
       },
     ];
 
-    return Row(
-      children: [
-        Expanded(
-          child: GridView.builder(
-            itemCount: barbershopServices.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 20, mainAxisSpacing: 20),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            itemBuilder: (context, index) => Card(
-              elevation: 5.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      barbershopServices[index]["name"],
-                      textAlign: TextAlign.center,
+    return Scaffold(
+      appBar: Responsive.isMobile() ? AppBar() : null,
+      drawer: Responsive.isMobile()
+          ? SidebarWidget(
+              isExpanded: true,
+              onToggleExpand: () {},
+            )
+          : null,
+      body: Responsive.isMobile()
+          ? SizedBox.shrink()
+          : Row(
+              children: [
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: barbershopServices.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    itemBuilder: (context, index) => Card(
+                      elevation: 5.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        padding: const EdgeInsets.all(5.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              barbershopServices[index]["name"],
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              AppStrings.indianRupee +
+                                  barbershopServices[index]["price"].toString(),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                    Text(
-                      AppStrings.indianRupee +
-                          barbershopServices[index]["price"].toString(),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: GridView.builder(
-            itemCount: barbershopEmployees.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 20, mainAxisSpacing: 20),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            itemBuilder: (context, index) => Card(
-              elevation: 5.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      barbershopEmployees[index]["name"],
-                      textAlign: TextAlign.center,
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: barbershopEmployees.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    itemBuilder: (context, index) => Card(
+                      elevation: 5.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        padding: const EdgeInsets.all(5.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              barbershopEmployees[index]["name"],
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              AppStrings.indianRupee +
+                                  barbershopEmployees[index]["rating"]
+                                      .toString(),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                    Text(
-                      AppStrings.indianRupee +
-                          barbershopEmployees[index]["rating"].toString(),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: BillSection(
-              selectedServices: [
-                {
-                  "id": 8,
-                  "name": "Eyebrow Shaping",
-                  "duration": "10 min",
-                  "price": 10.00,
-                  "description": "Clean and shape eyebrows with precision.",
-                },
+                Expanded(
+                  child: BillSection(
+                      selectedServices: [
+                        {
+                          "id": 8,
+                          "name": "Eyebrow Shaping",
+                          "duration": "10 min",
+                          "price": 10.00,
+                          "description":
+                              "Clean and shape eyebrows with precision.",
+                        },
+                      ],
+                      shopName: "Bellozee",
+                      shopLogo: Assets.images.logo.path,
+                      contactNumber: "+919087654321",
+                      email: "info@bellozee",
+                      address: "address",
+                      slogan: ""),
+                ),
               ],
-              shopName: "Bellozee",
-              shopLogo: Assets.images.logo.path,
-              contactNumber: "+919087654321",
-              email: "info@bellozee",
-              address: "address",
-              slogan: ""),
-        ),
-      ],
+            ),
     );
   }
 }
