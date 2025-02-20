@@ -40,14 +40,19 @@ class _SidebarState extends State<SidebarWidget> {
     },
     {
       AppStrings.icon: Icons.campaign_rounded,
+      AppStrings.title: AppStrings.services,
+      AppStrings.path: AppRouter.serviceScreen,
+    },
+    {
+      AppStrings.icon: Icons.campaign_rounded,
+      AppStrings.title: AppStrings.categories,
+      AppStrings.path: AppRouter.categoryScreen,
+    },
+    {
+      AppStrings.icon: Icons.campaign_rounded,
       AppStrings.title: AppStrings.reports,
       AppStrings.path: AppRouter.employeeScreen,
     },
-    // {
-    //   AppStrings.icon: Icons.settings,
-    //   AppStrings.title: AppStrings.admin,
-    //   AppStrings.route: PageResources.admin
-    // },
     {
       AppStrings.icon: Icons.settings_rounded,
       AppStrings.title: AppStrings.settings,

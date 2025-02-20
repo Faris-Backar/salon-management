@@ -9,6 +9,31 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/category.svg
+  String get category => 'assets/icons/category.svg';
+
+  /// File path: assets/icons/haircut.svg
+  String get haircut => 'assets/icons/haircut.svg';
+
+  /// File path: assets/icons/home-_1_.svg
+  String get home1 => 'assets/icons/home-_1_.svg';
+
+  /// File path: assets/icons/report.svg
+  String get report => 'assets/icons/report.svg';
+
+  /// File path: assets/icons/setting.svg
+  String get setting => 'assets/icons/setting.svg';
+
+  /// File path: assets/icons/team.svg
+  String get team => 'assets/icons/team.svg';
+
+  /// List of all assets
+  List<String> get values => [category, haircut, home1, report, setting, team];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -24,17 +49,14 @@ class $AssetsImagesGen {
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -62,7 +84,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -94,15 +116,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

@@ -52,7 +52,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  /// Builds the sidebar with expansion toggle.
   Widget _buildSidebarWithExpansion() {
     return ValueListenableBuilder<bool>(
       valueListenable: sideBarExpansionNotifier,
@@ -65,7 +64,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  /// Builds the app bar.
   AppBar _buildAppBar(bool isDesktop) {
     return AppBar(
       leading: isDesktop

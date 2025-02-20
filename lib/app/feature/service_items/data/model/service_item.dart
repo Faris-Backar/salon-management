@@ -5,5 +5,7 @@ class ServiceItem extends ServiceItemEntity {
       {required super.uid,
       required super.name,
       required super.price,
-      required super.isActive});
+      required super.isActive,
+      required super.categoryName,
+      required super.categoryUid});
 }

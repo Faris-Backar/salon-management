@@ -12,6 +12,8 @@ class AppRouter extends RootStackRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: SplashRoute.page, initial: true, path: splashScreen),
         AutoRoute(page: LoginRoute.page, path: loginScreen),
+        AutoRoute(page: CreateCategoryRoute.page, path: createCategoryScreen),
+        AutoRoute(page: CreateServiceItemRoute.page, path: createServiceScreen),
         AutoRoute(
           page: DashboardRoute.page,
           path: dashBoardScreen,
@@ -30,12 +32,12 @@ class AppRouter extends RootStackRouter {
               path: customerScreen,
             ),
             AutoRoute(
-              page: EmployeeRoute.page,
-              path: employeeScreen,
+              page: ServiceItemsRoute.page,
+              path: serviceScreen,
             ),
             AutoRoute(
-              page: EmployeeRoute.page,
-              path: employeeScreen,
+              page: CategoryRoute.page,
+              path: categoryScreen,
             ),
           ],
         ),
@@ -47,6 +49,10 @@ class AppRouter extends RootStackRouter {
   static const String dashBoardScreen = "/dashboard";
   static const String employeeScreen = "employee";
   static const String customerScreen = "customer";
+  static const String serviceScreen = "service";
+  static const String createServiceScreen = "/create_service";
+  static const String createCategoryScreen = "/create_category";
+  static const String categoryScreen = "category";
 }
 
 class AuthGuard extends AutoRouteGuard {
