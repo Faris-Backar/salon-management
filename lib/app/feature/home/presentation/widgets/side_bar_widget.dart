@@ -100,6 +100,7 @@ class _SidebarState extends State<SidebarWidget> {
                   setState(() {
                     selectedIndex = index;
                   });
+                  context.router.popForced();
                   context.router.pushNamed(options[index][AppStrings.path]);
                 },
                 child: Container(
@@ -108,7 +109,7 @@ class _SidebarState extends State<SidebarWidget> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? context.colorScheme.surfaceDim
+                        ? context.colorScheme.primary // Highlight color
                         : isHovered
                             ? Colors.grey[400]
                             : Colors.transparent,
@@ -127,7 +128,10 @@ class _SidebarState extends State<SidebarWidget> {
                           ),
                           child: SvgIcon(
                             icon: options[index][AppStrings.icon],
-                            color: context.onSurfaceColor,
+                            color: isSelected
+                                ? context.colorScheme
+                                    .onPrimary // Text color for highlight
+                                : context.onSurfaceColor,
                           ),
                         ),
                       ),
@@ -135,8 +139,13 @@ class _SidebarState extends State<SidebarWidget> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(options[index][AppStrings.title],
-                              style: context.textTheme.bodyLarge
-                                  ?.copyWith(overflow: TextOverflow.ellipsis)),
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                overflow: TextOverflow.ellipsis,
+                                color: isSelected
+                                    ? context.colorScheme
+                                        .onPrimary // Text color for highlight
+                                    : null,
+                              )),
                         ),
                       ],
                     ],

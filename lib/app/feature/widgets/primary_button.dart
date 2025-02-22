@@ -20,8 +20,7 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         side: const BorderSide(color: Colors.black),
-        backgroundColor:
-            isOutlineButton ? null : context.colorScheme.onTertiaryFixed,
+        backgroundColor: isOutlineButton ? null : context.colorScheme.primary,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(8),
