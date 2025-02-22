@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
@@ -61,8 +62,8 @@ class BillEntities {
       'totalAmount': totalAmount,
       'discountAmount': discountAmount,
       'paymentMethod': paymentMethod,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'modifiedAt': modifiedAt.millisecondsSinceEpoch,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'modifiedAt': Timestamp.fromDate(modifiedAt),
     };
   }
 
@@ -76,8 +77,8 @@ class BillEntities {
       totalAmount: map['totalAmount']?.toDouble() ?? 0.0,
       discountAmount: map['discountAmount']?.toDouble() ?? 0.0,
       paymentMethod: map['paymentMethod'] ?? '',
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      modifiedAt: DateTime.fromMillisecondsSinceEpoch(map['modifiedAt']),
+      createdAt: (map['createdAt'] as Timestamp).toDate(),
+      modifiedAt: (map['modifiedAt'] as Timestamp).toDate(),
     );
   }
 

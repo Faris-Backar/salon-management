@@ -42,6 +42,11 @@ class AppStrings {
   static const String createEmployee = "Create Employee";
   static const String viewEmployees = "View Employees";
   static const String employeeCreatedSuccess = "Employee created successfull";
+  static const String employeeUpdatedSuccess = "Employee updated successfull";
+  static const String serviceItemCreatedSuccess =
+      "Service item created successfull";
+  static const String serviceItemUpdatedSuccess =
+      "Service item updated successfull";
   static const String services = "Services";
   static const String addService = "Add Services";
   static const String categories = "Categories";
@@ -51,4 +56,6 @@ class AppStrings {
   static const String categoryName = "category Name";
   static const String createCategorySuccessFully =
       "Category created successfull";
+  static const String transactions = "Transactions";
+  static const String updateService = "Update Service";
 }

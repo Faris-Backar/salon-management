@@ -16,7 +16,8 @@ import 'package:uuid/uuid.dart';
 
 @RoutePage()
 class CreateServiceItemScreen extends ConsumerStatefulWidget {
-  const CreateServiceItemScreen({super.key});
+  final ServiceItemEntity? serviceItemEntity;
+  const CreateServiceItemScreen(this.serviceItemEntity, {super.key});
 
   @override
   ConsumerState<CreateServiceItemScreen> createState() =>
@@ -37,6 +38,16 @@ class _CreateServiceItemScreenState
     super.initState();
     Future.microtask(() {
       ref.read(categoryNotifierProvider.notifier).fetchCategoriesItems();
+
+      // If serviceItemEntity is passed, populate the form fields
+      if (widget.serviceItemEntity != null) {
+        final serviceItem = widget.serviceItemEntity!;
+        _nameController.text = serviceItem.name;
+        _serviceChargeController.text = serviceItem.price;
+        _enabledNotifier.value = serviceItem.isActive;
+        _selectedCategoryUid.value = serviceItem.categoryUid;
+        _selectedCategoryName.value = serviceItem.categoryName;
+      }
     });
   }
 
@@ -66,7 +77,16 @@ class _CreateServiceItemScreenState
           context.back();
           AppUtils.showSnackBar(
             context,
-            content: AppStrings.employeeCreatedSuccess,
+            content: AppStrings.serviceItemCreatedSuccess,
+            isForErrorMessage: false,
+          );
+        },
+        updateServiceItemsuccess: (user) {
+          ref.read(serviceItemNotifierProvider.notifier).fetchServiceItems();
+          context.back();
+          AppUtils.showSnackBar(
+            context,
+            content: AppStrings.serviceItemUpdatedSuccess,
             isForErrorMessage: false,
           );
         },
@@ -78,7 +98,9 @@ class _CreateServiceItemScreenState
       appBar: Responsive.isDesktop()
           ? null
           : AppBar(
-              title: Text(AppStrings.addService),
+              title: Text(widget.serviceItemEntity == null
+                  ? AppStrings.addService
+                  : AppStrings.updateService),
             ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -139,7 +161,9 @@ class _CreateServiceItemScreenState
                     valueListenable: _selectedCategoryUid,
                     builder: (context, selectedValue, child) {
                       return DropdownButtonFormField<String>(
-                        value: selectedValue,
+                        value: selectedValue.isEmpty
+                            ? widget.serviceItemEntity?.categoryUid ?? ""
+                            : selectedValue,
                         items: dropdownItems,
                         borderRadius: BorderRadius.circular(5.0),
                         onChanged: (value) {
@@ -201,10 +225,12 @@ class _CreateServiceItemScreenState
             onPressed: () {},
           ),
           orElse: () => PrimaryButton(
-            label: AppStrings.addService,
+            label: widget.serviceItemEntity == null
+                ? AppStrings.addService
+                : AppStrings.updateService,
             onPressed: () {
               if (_formKey.currentState?.validate() == true) {
-                final uid = const Uuid().v8();
+                final uid = widget.serviceItemEntity?.uid ?? const Uuid().v8();
                 final service = ServiceItemEntity(
                   uid: uid,
                   name: _nameController.text,
@@ -215,9 +241,15 @@ class _CreateServiceItemScreenState
                   categoryUid: _selectedCategoryUid.value,
                 );
 
-                ref
-                    .read(serviceItemNotifierProvider.notifier)
-                    .createServiceItems(serviceItems: service);
+                if (widget.serviceItemEntity == null) {
+                  ref
+                      .read(serviceItemNotifierProvider.notifier)
+                      .createServiceItems(serviceItems: service);
+                } else {
+                  ref
+                      .read(serviceItemNotifierProvider.notifier)
+                      .updateServiceItems(serviceItems: service);
+                }
               }
             },
           ),

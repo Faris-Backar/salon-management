@@ -54,7 +54,18 @@ class ServiceItemRepositoryImpl extends ServiceItemsRepository {
 
   @override
   Future<Either<Failure, bool>> updateServiceItems(
-      {required ServiceItemEntity serviceItems}) {
-    throw UnimplementedError();
+      {required ServiceItemEntity serviceItems}) async {
+    try {
+      final docRef = firestore
+          .collection(FirebaseResources.serviceItem)
+          .doc(serviceItems.uid);
+      final updatedData = serviceItems.toMap();
+      await docRef.update(updatedData);
+      return const Right(true);
+    } on FirebaseException catch (e) {
+      return Left(ServerFailure(message: FirebaseUtils.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(ServerFailure(message: "An unexpected error occurred: $e"));
+    }
   }
 }

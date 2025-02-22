@@ -51,16 +51,20 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
   // }
 
   fetchCategoriesItems() async {
-    state = CategoryState.initial();
     state = CategoryState.loading();
+
     final result = await categoryUsecase.getCategories();
-    result.fold((l) {
-      state = CategoryState.failed(error: l.message);
-      return ServerFailure();
-    }, (r) {
-      r.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      state = CategoryState.categoryFetched(employeeList: r);
-      return r;
-    });
+    result.fold(
+      (failure) {
+        state = CategoryState.failed(error: failure.message);
+      },
+      (categories) {
+        categories
+          ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()))
+          ..removeWhere((category) => category.isActive == false);
+
+        state = CategoryState.categoryFetched(employeeList: categories);
+      },
+    );
   }
 }
