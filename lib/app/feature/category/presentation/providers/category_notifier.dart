@@ -58,6 +58,7 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
       state = CategoryState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
+      r.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       state = CategoryState.categoryFetched(employeeList: r);
       return r;
     });

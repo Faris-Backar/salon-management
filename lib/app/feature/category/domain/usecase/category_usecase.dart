@@ -5,14 +5,14 @@ import 'package:salon_management/app/feature/category/domain/entities/category_e
 import 'package:salon_management/app/feature/category/domain/repositories/category_repository.dart';
 import 'package:salon_management/app/feature/employee/domain/entities/employee_enitity.dart';
 
-class CategoryUsecase extends UseCase<Either<Failure, EmployeeEnitity>, Unit> {
+class CategoryUsecase extends UseCase<Either<Failure, EmployeeEntity>, Unit> {
   final CategoryRepository categoryRepository;
   CategoryUsecase({
     required this.categoryRepository,
   });
 
   @override
-  Future<Either<Failure, EmployeeEnitity>> call({required Unit params}) {
+  Future<Either<Failure, EmployeeEntity>> call({required Unit params}) {
     throw UnimplementedError();
   }
 

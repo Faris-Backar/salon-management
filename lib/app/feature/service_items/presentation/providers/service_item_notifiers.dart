@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/core/app_core.dart';
+import 'package:salon_management/app/feature/category/data/data/category.dart';
 import 'package:salon_management/app/feature/service_items/domain/enitites/service_item_entity.dart';
 import 'package:salon_management/app/feature/service_items/domain/usecase/service_item_usecase.dart';
 import 'package:salon_management/app/feature/service_items/presentation/providers/service_state.dart';
@@ -9,6 +10,8 @@ class ServiceItemNotifier extends StateNotifier<ServiceItemState> {
   ServiceItemNotifier({
     required this.serviceItemUsecase,
   }) : super(ServiceItemState.initial());
+
+  List<ServiceItemEntity> serviceItems = [];
 
   createServiceItems({required ServiceItemEntity serviceItems}) async {
     state = ServiceItemState.initial();
@@ -52,7 +55,7 @@ class ServiceItemNotifier extends StateNotifier<ServiceItemState> {
     });
   }
 
-  fetchServiceItems({required ServiceItemEntity serviceItems}) async {
+  fetchServiceItems() async {
     state = ServiceItemState.initial();
     state = ServiceItemState.loading();
     final result = await serviceItemUsecase.getServiceItems();
@@ -60,8 +63,24 @@ class ServiceItemNotifier extends StateNotifier<ServiceItemState> {
       state = ServiceItemState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
+      r.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      serviceItems = r;
       state = ServiceItemState.serviceItemsFetched(serviceItems: r);
       return r;
     });
   }
+
+  List<ServiceItemEntity> fetchServiceItemsBasedonCategory(
+      {required String categoryUid, bool isForAll = false}) {
+    state = ServiceItemState.initial();
+    state = ServiceItemState.loading();
+    final filteredResult = serviceItems
+        .where((service) => service.categoryUid == categoryUid)
+        .toList();
+    state = ServiceItemState.serviceItemsFetched(
+        serviceItems: isForAll ? serviceItems : filteredResult);
+    return filteredResult;
+  }
+
+  void updateCategoryItems({required Category category}) {}
 }

@@ -1,4 +1,4 @@
-class EmployeeEnitity {
+class EmployeeEntity {
   final String uid;
   final String fullname;
   final String mobile;
@@ -6,7 +6,7 @@ class EmployeeEnitity {
   final String permenentAddress;
   final String specialisation;
 
-  EmployeeEnitity(
+  EmployeeEntity(
       {required this.uid,
       required this.fullname,
       required this.mobile,
@@ -14,7 +14,7 @@ class EmployeeEnitity {
       required this.permenentAddress,
       required this.specialisation});
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
       'fullname': fullname,
@@ -23,5 +23,16 @@ class EmployeeEnitity {
       'permenentAddress': permenentAddress,
       'specialisation': specialisation,
     };
+  }
+
+  factory EmployeeEntity.fromMap(Map<String, dynamic> map) {
+    return EmployeeEntity(
+      uid: map['uid'] ?? '',
+      fullname: map['fullname'] ?? '',
+      mobile: map['mobile'] ?? '',
+      contactAddress: map['contactAddress'] ?? '',
+      permenentAddress: map['permenentAddress'] ?? '',
+      specialisation: map['specialisation'] ?? '',
+    );
   }
 }

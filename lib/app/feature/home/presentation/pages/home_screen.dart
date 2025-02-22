@@ -1,277 +1,391 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:salon_management/app/core/app_strings.dart';
-import 'package:salon_management/app/core/utils/responsive.dart';
-import 'package:salon_management/app/feature/home/presentation/widgets/bill_section.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/feature/cart/domain/entities/bill_entities.dart';
+import 'package:salon_management/app/feature/cart/presentation/notifiers/cart/cart_notifier.dart';
+import 'package:salon_management/app/feature/cart/presentation/notifiers/checkout/checkout_notifier.dart';
+import 'package:salon_management/app/feature/cart/presentation/notifiers/checkout/checkout_state.dart';
+import 'package:salon_management/app/feature/cart/presentation/widgets/bill_section.dart';
+import 'package:salon_management/app/feature/category/presentation/providers/category_provider.dart';
+import 'package:salon_management/app/feature/customer/presentation/providers/customer_provider.dart';
+import 'package:salon_management/app/feature/service_items/presentation/providers/service_provider.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/side_bar_widget.dart';
+import 'package:salon_management/app/core/utils/responsive.dart';
+import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/gen/assets.gen.dart';
+import 'package:uuid/uuid.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> barbershopServices = [
-      {
-        "id": 1,
-        "name": "Men's Haircut",
-        "duration": "30 min",
-        "price": 25.00,
-        "description": "Classic haircut with styling.",
-      },
-      {
-        "id": 2,
-        "name": "Beard Trim",
-        "duration": "15 min",
-        "price": 15.00,
-        "description": "Precision beard trimming and shaping.",
-      },
-      {
-        "id": 3,
-        "name": "Hot Towel Shave",
-        "duration": "30 min",
-        "price": 30.00,
-        "description":
-            "Traditional straight razor shave with hot towel treatment.",
-      },
-      {
-        "id": 4,
-        "name": "Haircut & Beard Trim",
-        "duration": "45 min",
-        "price": 40.00,
-        "description": "Complete grooming package for hair and beard.",
-      },
-      {
-        "id": 5,
-        "name": "Kids' Haircut",
-        "duration": "20 min",
-        "price": 20.00,
-        "description": "Gentle and fun haircut for children under 12.",
-      },
-      {
-        "id": 6,
-        "name": "Scalp Massage",
-        "duration": "20 min",
-        "price": 18.00,
-        "description":
-            "Relaxing scalp massage to relieve stress and improve circulation.",
-      },
-      {
-        "id": 7,
-        "name": "Hair Wash & Style",
-        "duration": "15 min",
-        "price": 12.00,
-        "description": "Refreshing hair wash followed by professional styling.",
-      },
-      {
-        "id": 8,
-        "name": "Eyebrow Shaping",
-        "duration": "10 min",
-        "price": 10.00,
-        "description": "Clean and shape eyebrows with precision.",
-      },
-    ];
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
 
-    final List<Map<String, dynamic>> barbershopEmployees = [
-      {
-        "id": 1,
-        "name": "John Smith",
-        "position": "Senior Barber",
-        "experience": "10 years",
-        "specialty": "Classic haircuts & beard styling",
-        "rating": 4.9,
-        "image": "assets/images/employees/john_smith.png",
-      },
-      {
-        "id": 2,
-        "name": "Emma Johnson",
-        "position": "Stylist",
-        "experience": "7 years",
-        "specialty": "Modern fades & scalp treatments",
-        "rating": 4.8,
-        "image": "assets/images/employees/emma_johnson.png",
-      },
-      {
-        "id": 3,
-        "name": "David Martinez",
-        "position": "Master Barber",
-        "experience": "15 years",
-        "specialty": "Straight razor shaves & hair tattoos",
-        "rating": 5.0,
-        "image": "assets/images/employees/david_martinez.png",
-      },
-      {
-        "id": 4,
-        "name": "Sophia Lee",
-        "position": "Hair Stylist",
-        "experience": "6 years",
-        "specialty": "Creative styling & kids' haircuts",
-        "rating": 4.7,
-        "image": "assets/images/employees/sophia_lee.png",
-      },
-      {
-        "id": 5,
-        "name": "Michael Brown",
-        "position": "Junior Barber",
-        "experience": "3 years",
-        "specialty": "Basic haircuts & beard trims",
-        "rating": 4.5,
-        "image": "assets/images/employees/michael_brown.png",
-      },
-      {
-        "id": 6,
-        "name": "Olivia Davis",
-        "position": "Hair & Scalp Specialist",
-        "experience": "8 years",
-        "specialty": "Scalp treatments & hair coloring",
-        "rating": 4.8,
-        "image": "assets/images/employees/olivia_davis.png",
-      },
-      {
-        "id": 7,
-        "name": "James Wilson",
-        "position": "Senior Barber",
-        "experience": "12 years",
-        "specialty": "Hot towel shaves & executive cuts",
-        "rating": 4.9,
-        "image": "assets/images/employees/james_wilson.png",
-      },
-      {
-        "id": 8,
-        "name": "Isabella Taylor",
-        "position": "Grooming Specialist",
-        "experience": "5 years",
-        "specialty": "Facial treatments & eyebrow shaping",
-        "rating": 4.6,
-        "image": "assets/images/employees/isabella_taylor.png",
-      },
-      {
-        "id": 9,
-        "name": "William Anderson",
-        "position": "Master Barber",
-        "experience": "14 years",
-        "specialty": "Precision fades & afro-textured hair",
-        "rating": 4.9,
-        "image": "assets/images/employees/william_anderson.png",
-      },
-      {
-        "id": 10,
-        "name": "Mia Harris",
-        "position": "Junior Stylist",
-        "experience": "2 years",
-        "specialty": "Basic cuts & hair wash styling",
-        "rating": 4.4,
-        "image": "assets/images/employees/mia_harris.png",
-      },
-    ];
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final ValueNotifier<String?> selectedCategoryUid =
+      ValueNotifier<String?>(null);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(categoryNotifierProvider.notifier).fetchCategoriesItems();
+      ref.read(serviceItemNotifierProvider.notifier).fetchServiceItems();
+      ref.read(employeeNotifierProvider.notifier).fetchEmployee();
+    });
+  }
+
+  @override
+  void dispose() {
+    selectedCategoryUid.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final categoriesState = ref.watch(categoryNotifierProvider);
+    final serviceItemsState = ref.watch(serviceItemNotifierProvider);
+    final cartState = ref.watch(cartNotifierProvider);
+
+    ref.listen<CheckoutState>(checkoutNotifierProvider, (previous, next) {
+      next.maybeWhen(
+        loading: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        },
+        failure: (error) {
+          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Checkout Failed"),
+                content: Text(error),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        success: () {
+          Navigator.pop(context);
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Checkout Successful"),
+                content:
+                    const Text("The bill has been processed successfully."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      ref.read(cartNotifierProvider.notifier).clearCart();
+                      context.router.popForced();
+                      context.router.popForced();
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        orElse: () {},
+      );
+    });
 
     return Scaffold(
-      appBar: Responsive.isMobile() ? AppBar() : null,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).appBarTheme.surfaceTintColor,
+        title: const Text('Home'),
+        actions: [
+          IconButton(
+            onPressed: () => _showEmployeeSelectionDialog(context),
+            icon: const Icon(Icons.person_rounded),
+          ),
+          Consumer(
+            builder: (context, ref, child) {
+              final cartState = ref.watch(cartNotifierProvider);
+              return IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+                icon: Badge.count(
+                  count: cartState.selectedServices.length,
+                  child: const Icon(Icons.receipt_rounded),
+                ),
+              );
+            },
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50.0),
+          child: categoriesState.maybeWhen(
+            initial: () => const SizedBox.shrink(),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            categoryFetched: (categoryList) {
+              return ValueListenableBuilder<String?>(
+                valueListenable: selectedCategoryUid,
+                builder: (context, selectedUid, child) {
+                  final allCategory = categoryList.firstWhere(
+                    (category) => category.name.toLowerCase() == "all",
+                    orElse: () => categoryList.first,
+                  );
+                  selectedCategoryUid.value ??= allCategory.uid;
+
+                  return Container(
+                    height: 50.0,
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categoryList.length,
+                      itemBuilder: (context, index) {
+                        final category = categoryList[index];
+                        final isSelected = selectedUid == category.uid;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: InkWell(
+                            onTap: () {
+                              selectedCategoryUid.value = category.uid;
+
+                              ref
+                                  .read(serviceItemNotifierProvider.notifier)
+                                  .fetchServiceItemsBasedonCategory(
+                                    categoryUid: category.uid,
+                                    isForAll:
+                                        category.name.toLowerCase() == "all",
+                                  );
+                            },
+                            child: Container(
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withValues(alpha: 0.2)
+                                    : context.colorScheme.tertiaryContainer,
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Colors.transparent,
+                                  width: 2.0,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(category.name),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+            orElse: () {
+              return Center(child: Text("Something went wrong."));
+            },
+          ),
+        ),
+      ),
       drawer: Responsive.isMobile()
           ? SidebarWidget(
               isExpanded: true,
               onToggleExpand: () {},
             )
           : null,
+      endDrawer: Drawer(
+        child: BillSection(
+          selectedServices: cartState.selectedServices,
+          shopName: "Bellozee",
+          shopLogo: Assets.images.logo.path,
+          contactNumber: "+919087654321",
+          email: "info@bellozee.com",
+          address: "Some Address",
+          slogan: "Thank you, visit again.",
+          customerName: cartState.customer?.name ?? "Guest",
+          customerPhoneNumber: cartState.customer?.mobileNumber ?? "N/A",
+          employeeName: cartState.employee?.fullname ?? "Not Assigned",
+          totalAmount: ref.read(cartNotifierProvider.notifier).totalAmount,
+          onCheckout: (amount, paymentMethod) {
+            final uid = const Uuid().v8();
+            final bill = BillEntities(
+              uid: uid,
+              selectedServices: cartState.selectedServices,
+              customer: cartState.customer,
+              employee: cartState.employee,
+              totalAmount: amount,
+              discountAmount: 0.0,
+              paymentMethod: paymentMethod,
+              createdAt: DateTime.now(),
+              modifiedAt: DateTime.now(),
+            );
+            ref.read(checkoutNotifierProvider.notifier).processCheckout(bill);
+          },
+          onClearBill: () {
+            ref.read(cartNotifierProvider.notifier).clearCart();
+          },
+        ),
+      ),
       body: Responsive.isMobile()
-          ? SizedBox.shrink()
+          ? serviceItemsState.maybeWhen(
+              serviceItemsFetched: (serviceItems) => GridView.builder(
+                itemCount: serviceItems.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      ref
+                          .read(cartNotifierProvider.notifier)
+                          .addService(serviceItems[index]);
+                    },
+                    child: Card(
+                      elevation: 5.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.surfaceBright,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        padding: const EdgeInsets.all(5.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              serviceItems[index].name,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              '${AppStrings.indianRupee}${serviceItems[index].price}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              orElse: () => const SizedBox.shrink(),
+            )
           : Row(
               children: [
                 Expanded(
-                  child: GridView.builder(
-                    itemCount: barbershopServices.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  child: serviceItemsState.maybeWhen(
+                    serviceItemsFetched: (serviceItems) => GridView.builder(
+                      itemCount: serviceItems.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: 20,
-                        mainAxisSpacing: 20),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    itemBuilder: (context, index) => Card(
-                      elevation: 5.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              barbershopServices[index]["name"],
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              AppStrings.indianRupee +
-                                  barbershopServices[index]["price"].toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
+                        mainAxisSpacing: 20,
                       ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    itemCount: barbershopEmployees.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    itemBuilder: (context, index) => Card(
-                      elevation: 5.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              barbershopEmployees[index]["name"],
-                              textAlign: TextAlign.center,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 5.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            Text(
-                              AppStrings.indianRupee +
-                                  barbershopEmployees[index]["rating"]
-                                      .toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
+                            padding: const EdgeInsets.all(5.0),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('Service Name'),
+                                Text('${AppStrings.indianRupee}100'),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
+                    orElse: () => const SizedBox.shrink(),
                   ),
-                ),
-                Expanded(
-                  child: BillSection(
-                      selectedServices: [
-                        {
-                          "id": 8,
-                          "name": "Eyebrow Shaping",
-                          "duration": "10 min",
-                          "price": 10.00,
-                          "description":
-                              "Clean and shape eyebrows with precision.",
-                        },
-                      ],
-                      shopName: "Bellozee",
-                      shopLogo: Assets.images.logo.path,
-                      contactNumber: "+919087654321",
-                      email: "info@bellozee",
-                      address: "address",
-                      slogan: ""),
                 ),
               ],
             ),
+    );
+  }
+
+  void _showEmployeeSelectionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Consumer(builder: (context, ref, child) {
+          final employeeState = ref.watch(employeeNotifierProvider);
+
+          return AlertDialog(
+            title: const Text("Select an Employee"),
+            content: employeeState.maybeWhen(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              employeesFetched: (employees) {
+                return SizedBox(
+                  width: double.maxFinite,
+                  height: 300,
+                  child: ListView.separated(
+                    itemCount: employees.length,
+                    separatorBuilder: (context, index) => Divider(),
+                    itemBuilder: (context, index) {
+                      final employee = employees[index];
+                      return ListTile(
+                        title: Text(employee.fullname),
+                        subtitle:
+                            Text("Specialisation: ${employee.specialisation}"),
+                        onTap: () {
+                          ref
+                              .read(cartNotifierProvider.notifier)
+                              .setEmployee(employee);
+                          context.router.popForced();
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
+              orElse: () => const Text("No employees available"),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+            ],
+          );
+        });
+      },
     );
   }
 }

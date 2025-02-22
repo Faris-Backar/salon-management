@@ -7,7 +7,7 @@ class EmployeeState with _$EmployeeState {
   const factory EmployeeState.initial() = _Initial;
   const factory EmployeeState.loading() = _Loading;
   const factory EmployeeState.employeesFetched(
-      {required List<EmployeeEnitity> employeeList}) = _EmployeesFetched;
+      {required List<EmployeeEntity> employeeList}) = _EmployeesFetched;
   const factory EmployeeState.createEmployeeSuccess({required bool isSuccess}) =
       _CreateEmployeeSuccess;
   const factory EmployeeState.updateEmployeeSuccess({required bool isSuccess}) =

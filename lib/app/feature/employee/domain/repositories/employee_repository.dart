@@ -4,9 +4,9 @@ import 'package:salon_management/app/feature/employee/domain/entities/employee_e
 
 abstract class EmployeeRepository {
   Future<Either<Failure, bool>> createEmployee(
-      {required EmployeeEnitity employee});
-  Future<Either<Failure, List<EmployeeEnitity>>> getEmployees();
+      {required EmployeeEntity employee});
+  Future<Either<Failure, List<EmployeeEntity>>> getEmployees();
   Future<Either<Failure, bool>> updateEmployee(
-      {required EmployeeEnitity employee});
+      {required EmployeeEntity employee});
   Future<Either<Failure, bool>> deleteEmployee({required String uid});
 }

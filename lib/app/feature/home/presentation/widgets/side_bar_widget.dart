@@ -7,6 +7,7 @@ import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/core/routes/app_router.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
+import 'package:salon_management/app/feature/widgets/svg_icon.dart';
 import 'package:salon_management/gen/assets.gen.dart';
 
 class SidebarWidget extends StatefulWidget {
@@ -29,32 +30,32 @@ class _SidebarState extends State<SidebarWidget> {
 
   final List<Map<String, dynamic>> options = [
     {
-      AppStrings.icon: Icons.home_rounded,
+      AppStrings.icon: Assets.icons.home1,
       AppStrings.title: AppStrings.home,
       AppStrings.path: AppRouter.homeScreen,
     },
     {
-      AppStrings.icon: Icons.school_rounded,
+      AppStrings.icon: Assets.icons.team,
       AppStrings.title: AppStrings.employees,
       AppStrings.path: AppRouter.employeeScreen,
     },
     {
-      AppStrings.icon: Icons.campaign_rounded,
+      AppStrings.icon: Assets.icons.haircut,
       AppStrings.title: AppStrings.services,
       AppStrings.path: AppRouter.serviceScreen,
     },
     {
-      AppStrings.icon: Icons.campaign_rounded,
+      AppStrings.icon: Assets.icons.category,
       AppStrings.title: AppStrings.categories,
       AppStrings.path: AppRouter.categoryScreen,
     },
     {
-      AppStrings.icon: Icons.campaign_rounded,
+      AppStrings.icon: Assets.icons.report,
       AppStrings.title: AppStrings.reports,
       AppStrings.path: AppRouter.employeeScreen,
     },
     {
-      AppStrings.icon: Icons.settings_rounded,
+      AppStrings.icon: Assets.icons.setting,
       AppStrings.title: AppStrings.settings,
       AppStrings.path: AppRouter.employeeScreen,
     },
@@ -112,8 +113,18 @@ class _SidebarState extends State<SidebarWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        options[index][AppStrings.icon],
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6.0,
+                          ),
+                          child: SvgIcon(
+                            icon: options[index][AppStrings.icon],
+                            color: context.onSurfaceColor,
+                          ),
+                        ),
                       ),
                       if (widget.isExpanded) ...[
                         const SizedBox(width: 8),

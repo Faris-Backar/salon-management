@@ -193,7 +193,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         onPressed: () {
                           if (_formKey.currentState?.validate() == true) {
                             final uid = Uuid().v8();
-                            final employeeDetails = EmployeeEnitity(
+                            final employeeDetails = EmployeeEntity(
                                 uid: uid,
                                 contactAddress: _currentAddressController.text,
                                 permenentAddress:

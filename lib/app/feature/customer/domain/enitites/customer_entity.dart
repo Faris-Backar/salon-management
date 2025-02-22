@@ -21,4 +21,30 @@ class CustomerEntity {
   }
 
   String toJson() => json.encode(toMap());
+
+  factory CustomerEntity.fromMap(Map<String, dynamic> map) {
+    return CustomerEntity(
+      uid: map['uid'] ?? '',
+      name: map['name'] ?? '',
+      mobileNumber: map['mobileNumber'] ?? '',
+      address: map['address'] ?? '',
+    );
+  }
+
+  factory CustomerEntity.fromJson(String source) =>
+      CustomerEntity.fromMap(json.decode(source));
+
+  CustomerEntity copyWith({
+    String? uid,
+    String? name,
+    String? mobileNumber,
+    String? address,
+  }) {
+    return CustomerEntity(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
+      address: address ?? this.address,
+    );
+  }
 }

@@ -20,7 +20,7 @@ mixin _$EmployeeState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -32,7 +32,7 @@ mixin _$EmployeeState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -43,7 +43,7 @@ mixin _$EmployeeState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -154,7 +154,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -169,7 +169,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -183,7 +183,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -293,7 +293,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -308,7 +308,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -322,7 +322,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -395,7 +395,7 @@ abstract class _$$EmployeesFetchedImplCopyWith<$Res> {
           $Res Function(_$EmployeesFetchedImpl) then) =
       __$$EmployeesFetchedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<EmployeeEnitity> employeeList});
+  $Res call({List<EmployeeEntity> employeeList});
 }
 
 /// @nodoc
@@ -417,7 +417,7 @@ class __$$EmployeesFetchedImplCopyWithImpl<$Res>
       employeeList: null == employeeList
           ? _value._employeeList
           : employeeList // ignore: cast_nullable_to_non_nullable
-              as List<EmployeeEnitity>,
+              as List<EmployeeEntity>,
     ));
   }
 }
@@ -426,12 +426,12 @@ class __$$EmployeesFetchedImplCopyWithImpl<$Res>
 
 class _$EmployeesFetchedImpl implements _EmployeesFetched {
   const _$EmployeesFetchedImpl(
-      {required final List<EmployeeEnitity> employeeList})
+      {required final List<EmployeeEntity> employeeList})
       : _employeeList = employeeList;
 
-  final List<EmployeeEnitity> _employeeList;
+  final List<EmployeeEntity> _employeeList;
   @override
-  List<EmployeeEnitity> get employeeList {
+  List<EmployeeEntity> get employeeList {
     if (_employeeList is EqualUnmodifiableListView) return _employeeList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_employeeList);
@@ -469,7 +469,7 @@ class _$EmployeesFetchedImpl implements _EmployeesFetched {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -484,7 +484,7 @@ class _$EmployeesFetchedImpl implements _EmployeesFetched {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -498,7 +498,7 @@ class _$EmployeesFetchedImpl implements _EmployeesFetched {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -563,10 +563,10 @@ class _$EmployeesFetchedImpl implements _EmployeesFetched {
 
 abstract class _EmployeesFetched implements EmployeeState {
   const factory _EmployeesFetched(
-          {required final List<EmployeeEnitity> employeeList}) =
+          {required final List<EmployeeEntity> employeeList}) =
       _$EmployeesFetchedImpl;
 
-  List<EmployeeEnitity> get employeeList;
+  List<EmployeeEntity> get employeeList;
 
   /// Create a copy of EmployeeState
   /// with the given fields replaced by the non-null parameter values.
@@ -648,7 +648,7 @@ class _$CreateEmployeeSuccessImpl implements _CreateEmployeeSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -663,7 +663,7 @@ class _$CreateEmployeeSuccessImpl implements _CreateEmployeeSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -677,7 +677,7 @@ class _$CreateEmployeeSuccessImpl implements _CreateEmployeeSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -826,7 +826,7 @@ class _$UpdateEmployeeSuccessImpl implements _UpdateEmployeeSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -841,7 +841,7 @@ class _$UpdateEmployeeSuccessImpl implements _UpdateEmployeeSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -855,7 +855,7 @@ class _$UpdateEmployeeSuccessImpl implements _UpdateEmployeeSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -1004,7 +1004,7 @@ class _$DeleteEmployeeSuccessImpl implements _DeleteEmployeeSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -1019,7 +1019,7 @@ class _$DeleteEmployeeSuccessImpl implements _DeleteEmployeeSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -1033,7 +1033,7 @@ class _$DeleteEmployeeSuccessImpl implements _DeleteEmployeeSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -1179,7 +1179,7 @@ class _$FailedImpl implements _Failed {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<EmployeeEnitity> employeeList)
+    required TResult Function(List<EmployeeEntity> employeeList)
         employeesFetched,
     required TResult Function(bool isSuccess) createEmployeeSuccess,
     required TResult Function(bool isSuccess) updateEmployeeSuccess,
@@ -1194,7 +1194,7 @@ class _$FailedImpl implements _Failed {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult? Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult? Function(bool isSuccess)? createEmployeeSuccess,
     TResult? Function(bool isSuccess)? updateEmployeeSuccess,
     TResult? Function(bool isSuccess)? deleteEmployeeSuccess,
@@ -1208,7 +1208,7 @@ class _$FailedImpl implements _Failed {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<EmployeeEnitity> employeeList)? employeesFetched,
+    TResult Function(List<EmployeeEntity> employeeList)? employeesFetched,
     TResult Function(bool isSuccess)? createEmployeeSuccess,
     TResult Function(bool isSuccess)? updateEmployeeSuccess,
     TResult Function(bool isSuccess)? deleteEmployeeSuccess,

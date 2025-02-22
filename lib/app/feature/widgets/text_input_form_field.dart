@@ -60,7 +60,7 @@ class TextInputFormField extends StatelessWidget {
               contentPadding ?? const EdgeInsets.symmetric(horizontal: 16.0),
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
-          fillColor: fillColor ?? context.colorScheme.surfaceContainer,
+          fillColor: fillColor ?? context.colorScheme.tertiaryContainer,
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(borderRadius ?? 5),

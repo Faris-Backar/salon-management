@@ -11,7 +11,7 @@ class EmployeeNotifier extends StateNotifier<EmployeeState> {
     required this.employeeUsecase,
   }) : super(EmployeeState.initial());
 
-  createEmployee({required EmployeeEnitity employee}) async {
+  createEmployee({required EmployeeEntity employee}) async {
     state = EmployeeState.initial();
     state = EmployeeState.loading();
     final result =
@@ -25,7 +25,7 @@ class EmployeeNotifier extends StateNotifier<EmployeeState> {
     });
   }
 
-  updateEmployee({required EmployeeEnitity employee}) async {
+  updateEmployee({required EmployeeEntity employee}) async {
     state = EmployeeState.initial();
     state = EmployeeState.loading();
     final result =
@@ -53,7 +53,7 @@ class EmployeeNotifier extends StateNotifier<EmployeeState> {
     });
   }
 
-  fetchEmployee({required EmployeeEnitity employee}) async {
+  fetchEmployee() async {
     state = EmployeeState.initial();
     state = EmployeeState.loading();
     final result = await employeeUsecase.getEmployees();

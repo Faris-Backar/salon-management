@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 abstract final class AppTheme {
   static ThemeData light = FlexThemeData.light(
-    scheme: FlexScheme.red,
+    scheme: FlexScheme.blue,
     subThemesData: const FlexSubThemesData(
       interactionEffects: true,
       tintedDisabledControls: true,
@@ -20,7 +20,7 @@ abstract final class AppTheme {
   );
   // The defined dark theme.
   static ThemeData dark = FlexThemeData.dark(
-    scheme: FlexScheme.red,
+    scheme: FlexScheme.blue,
     subThemesData: const FlexSubThemesData(
       interactionEffects: true,
       tintedDisabledControls: true,
@@ -32,6 +32,10 @@ abstract final class AppTheme {
       navigationRailUseIndicator: true,
       navigationRailLabelType: NavigationRailLabelType.all,
     ),
+    tertiaryContainer: Color(0xFF242425),
+    secondaryContainer: Color(0xFF5C5C5C),
+    scaffoldBackground: Color(0xFF161616),
+    appBarStyle: FlexAppBarStyle.scaffoldBackground,
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
   );

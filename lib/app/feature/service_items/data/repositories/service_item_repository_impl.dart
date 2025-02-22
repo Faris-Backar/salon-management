@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:salon_management/app/core/error/failure.dart';
 import 'package:salon_management/app/core/resources/firebase_resources.dart';
 import 'package:salon_management/app/core/utils/firebase_utils.dart';
+import 'package:salon_management/app/feature/service_items/data/model/service_item.dart';
 import 'package:salon_management/app/feature/service_items/domain/enitites/service_item_entity.dart';
 import 'package:salon_management/app/feature/service_items/domain/repositories/service_repository.dart';
 
@@ -34,8 +35,21 @@ class ServiceItemRepositoryImpl extends ServiceItemsRepository {
   }
 
   @override
-  Future<Either<Failure, List<ServiceItemEntity>>> getServiceItems() {
-    throw UnimplementedError();
+  Future<Either<Failure, List<ServiceItemEntity>>> getServiceItems() async {
+    try {
+      final querySnapshot =
+          await firestore.collection(FirebaseResources.serviceItem).get();
+
+      final categories = querySnapshot.docs.map((doc) {
+        return ServiceItem.fromJson(doc.data());
+      }).toList();
+
+      return Right(categories);
+    } on FirebaseException catch (e) {
+      return Left(ServerFailure(message: FirebaseUtils.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(ServerFailure(message: "An unexpected error occurred: $e"));
+    }
   }
 
   @override
