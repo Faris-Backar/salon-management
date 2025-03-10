@@ -10,6 +10,8 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
     required this.customerUsecase,
   }) : super(CustomerState.initial());
 
+  List<CustomerEntity> customers = [];
+
   createcustomer({required CustomerEntity customer}) async {
     state = CustomerState.initial();
     state = CustomerState.loading();
@@ -51,7 +53,7 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
     });
   }
 
-  fetchcustomer({required CustomerEntity customer}) async {
+  fetchcustomer() async {
     state = CustomerState.initial();
     state = CustomerState.loading();
     final result = await customerUsecase.getCustomers();
@@ -59,8 +61,27 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
       state = CustomerState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
+      customers = r;
       state = CustomerState.customerFetched(employeeList: r);
       return r;
     });
+  }
+
+  void searchCustomer(String query) async {
+    state = const CustomerState.loading();
+
+    try {
+      final customerList = customers.where((customer) {
+        final name = customer.name.toLowerCase();
+        final phone = customer.mobileNumber;
+        final searchQuery = query.toLowerCase();
+        return name.contains(searchQuery) || phone.contains(searchQuery);
+      }).toList();
+
+      state = CustomerState.customerFetched(
+          employeeList: query.isEmpty ? customers : customerList);
+    } catch (e) {
+      state = CustomerState.failed(error: e.toString());
+    }
   }
 }

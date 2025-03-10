@@ -185,7 +185,10 @@ class _BillSectionState extends State<BillSection> {
                 context.router.popForced();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text("Clear"),
+              child: Text(
+                "Clear",
+                style: TextStyle(color: context.colorScheme.onPrimary),
+              ),
             ),
           ],
         );
@@ -252,7 +255,7 @@ class _BillSectionState extends State<BillSection> {
                   onPressed: widget.selectedServices.isEmpty
                       ? null
                       : _showCheckoutDialog,
-                  child: const Text("Checkout"),
+                  label: "Checkout",
                 ),
               ],
             ),

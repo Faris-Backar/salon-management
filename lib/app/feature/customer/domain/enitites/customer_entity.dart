@@ -31,8 +31,8 @@ class CustomerEntity {
     );
   }
 
-  factory CustomerEntity.fromJson(String source) =>
-      CustomerEntity.fromMap(json.decode(source));
+  factory CustomerEntity.fromJson(Map<String, dynamic> source) =>
+      CustomerEntity.fromMap(source);
 
   CustomerEntity copyWith({
     String? uid,

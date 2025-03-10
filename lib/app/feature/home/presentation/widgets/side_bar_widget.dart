@@ -1,6 +1,7 @@
-// sidebar_widget.dart
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:salon_management/app/core/app_strings.dart';
@@ -9,6 +10,7 @@ import 'package:salon_management/app/core/routes/app_router.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/widgets/svg_icon.dart';
 import 'package:salon_management/gen/assets.gen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SidebarWidget extends StatefulWidget {
   final bool isExpanded;
@@ -45,6 +47,11 @@ class _SidebarState extends State<SidebarWidget> {
       AppStrings.path: AppRouter.employeeScreen,
     },
     {
+      AppStrings.icon: Assets.icons.team,
+      AppStrings.title: AppStrings.customers,
+      AppStrings.path: AppRouter.customerScreen,
+    },
+    {
       AppStrings.icon: Assets.icons.haircut,
       AppStrings.title: AppStrings.services,
       AppStrings.path: AppRouter.serviceScreen,
@@ -57,7 +64,7 @@ class _SidebarState extends State<SidebarWidget> {
     {
       AppStrings.icon: Assets.icons.report,
       AppStrings.title: AppStrings.reports,
-      AppStrings.path: AppRouter.employeeScreen,
+      AppStrings.path: AppRouter.reportScreen,
     },
     {
       AppStrings.icon: Assets.icons.setting,
@@ -65,6 +72,15 @@ class _SidebarState extends State<SidebarWidget> {
       AppStrings.path: AppRouter.employeeScreen,
     },
   ];
+
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    if (context.mounted) {
+      context.router.replaceNamed(AppRouter.loginScreen);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,72 +104,115 @@ class _SidebarState extends State<SidebarWidget> {
             ),
           ),
           const SizedBox(height: 10),
-          ...List.generate(options.length, (index) {
-            final isHovered = hoveredIndex == index;
-            final isSelected = selectedIndex == index;
-            return MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (_) => setState(() => hoveredIndex = index),
-              onExit: (_) => setState(() => hoveredIndex = null),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                  context.router.popForced();
-                  context.router.pushNamed(options[index][AppStrings.path]);
-                },
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? context.colorScheme.primary // Highlight color
-                        : isHovered
-                            ? Colors.grey[400]
-                            : Colors.transparent,
-                    borderRadius: BorderRadius.circular(5),
+          Expanded(
+            child: ListView.builder(
+              itemCount: options.length,
+              itemBuilder: (context, index) {
+                final isHovered = hoveredIndex == index;
+                final isSelected = selectedIndex == index;
+                return MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  onEnter: (_) => setState(() => hoveredIndex = index),
+                  onExit: (_) => setState(() => hoveredIndex = null),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                      context.router.popForced();
+                      context.router.pushNamed(options[index][AppStrings.path]);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? context.colorScheme.primary
+                            : isHovered
+                                ? Colors.grey[400]
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 6.0),
+                              child: SvgIcon(
+                                icon: options[index][AppStrings.icon],
+                                color: isSelected
+                                    ? context.colorScheme.onPrimary
+                                    : context.onSurfaceColor,
+                              ),
+                            ),
+                          ),
+                          if (widget.isExpanded) ...[
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                options[index][AppStrings.title],
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  overflow: TextOverflow.ellipsis,
+                                  color: isSelected
+                                      ? context.colorScheme.onPrimary
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                   ),
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6.0,
-                          ),
-                          child: SvgIcon(
-                            icon: options[index][AppStrings.icon],
-                            color: isSelected
-                                ? context.colorScheme
-                                    .onPrimary // Text color for highlight
-                                : context.onSurfaceColor,
-                          ),
+                );
+              },
+            ),
+          ),
+
+          // Logout Button
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: GestureDetector(
+              onTap: _logout,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: SvgIcon(
+                            icon: Assets.icons.logout, color: Colors.white)),
+                    if (widget.isExpanded) ...[
+                      const SizedBox(width: 8),
+                      Text(
+                        "Logout",
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (widget.isExpanded) ...[
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(options[index][AppStrings.title],
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                overflow: TextOverflow.ellipsis,
-                                color: isSelected
-                                    ? context.colorScheme
-                                        .onPrimary // Text color for highlight
-                                    : null,
-                              )),
-                        ),
-                      ],
                     ],
-                  ),
+                  ],
                 ),
               ),
-            );
-          }),
+            ),
+          ),
+          const SizedBox(height: 10),
         ],
       ),
     );

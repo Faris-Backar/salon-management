@@ -21,6 +21,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/home-_1_.svg
   String get home1 => 'assets/icons/home-_1_.svg';
 
+  /// File path: assets/icons/logout.svg
+  String get logout => 'assets/icons/logout.svg';
+
   /// File path: assets/icons/report.svg
   String get report => 'assets/icons/report.svg';
 
@@ -31,7 +34,15 @@ class $AssetsIconsGen {
   String get team => 'assets/icons/team.svg';
 
   /// List of all assets
-  List<String> get values => [category, haircut, home1, report, setting, team];
+  List<String> get values => [
+    category,
+    haircut,
+    home1,
+    logout,
+    report,
+    setting,
+    team,
+  ];
 }
 
 class $AssetsImagesGen {

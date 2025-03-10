@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
-import 'package:salon_management/app/core/routes/app_router.dart';
 import 'package:salon_management/app/core/routes/app_router.gr.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/category/data/data/category.dart';
@@ -39,8 +38,8 @@ class _ServiceItemsScreenState extends ConsumerState<ServiceItemsScreen> {
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         backgroundColor: context.colorScheme.primary,
-        onPressed: () =>
-            context.router.pushNamed(AppRouter.createServiceScreen),
+        onPressed: () => context.router
+            .push(CreateServiceItemRoute(serviceItemEntity: null)),
         child: Icon(
           Icons.add_rounded,
           color: context.colorScheme.onPrimary,
@@ -162,6 +161,7 @@ class _ServiceItemsScreenState extends ConsumerState<ServiceItemsScreen> {
                   ),
                   child: Card(
                     elevation: 3,
+                    color: context.colorScheme.tertiaryContainer,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),

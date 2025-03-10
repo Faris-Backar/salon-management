@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:salon_management/app/core/error/failure.dart';
 import 'package:salon_management/app/core/resources/firebase_resources.dart';
 import 'package:salon_management/app/core/utils/firebase_utils.dart';
-import 'package:salon_management/app/feature/customer/data/model/customer.dart';
 import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
 import 'package:salon_management/app/feature/customer/domain/repositories/customer_repository.dart';
 
@@ -32,8 +31,21 @@ class CustomerRepositoryImpl extends CustomerRepository {
   }
 
   @override
-  Future<Either<Failure, List<Customer>>> getCustomers() {
-    throw UnimplementedError();
+  Future<Either<Failure, List<CustomerEntity>>> getCustomers() async {
+    try {
+      final querySnapshot =
+          await firestore.collection(FirebaseResources.customer).get();
+
+      final customer = querySnapshot.docs.map((doc) {
+        return CustomerEntity.fromJson(doc.data());
+      }).toList();
+
+      return Right(customer);
+    } on FirebaseException catch (e) {
+      return Left(ServerFailure(message: FirebaseUtils.handleFirebaseError(e)));
+    } catch (e) {
+      return Left(ServerFailure(message: "An unexpected error occurred: $e"));
+    }
   }
 
   @override

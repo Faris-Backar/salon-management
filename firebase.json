@@ -1,1 +1,35 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"ballozee-salon-app","appId":"1:976547159655:android:0acbb3098fa0bdec24bec2","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"ballozee-salon-app","configurations":{"android":"1:976547159655:android:0acbb3098fa0bdec24bec2","ios":"1:976547159655:ios:e6cb90c70b201bdb24bec2","web":"1:976547159655:web:28b228d4b4ebf23224bec2"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "ballozee-salon-app",
+          "appId": "1:976547159655:android:0acbb3098fa0bdec24bec2",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "ballozee-salon-app",
+          "configurations": {
+            "android": "1:976547159655:android:0acbb3098fa0bdec24bec2",
+            "ios": "1:976547159655:ios:e6cb90c70b201bdb24bec2",
+            "web": "1:976547159655:web:28b228d4b4ebf23224bec2"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

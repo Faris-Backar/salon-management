@@ -40,6 +40,10 @@ class AppRouter extends RootStackRouter {
               path: serviceScreen,
             ),
             AutoRoute(
+              page: ReportRoute.page,
+              path: reportScreen,
+            ),
+            AutoRoute(
               page: CategoryRoute.page,
               path: categoryScreen,
             ),
@@ -58,6 +62,7 @@ class AppRouter extends RootStackRouter {
   static const String createCategoryScreen = "/create_category";
   static const String categoryScreen = "category";
   static const String transactionScreen = "transaction";
+  static const String reportScreen = "report";
 }
 
 class AuthGuard extends AutoRouteGuard {

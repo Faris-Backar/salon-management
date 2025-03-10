@@ -31,6 +31,7 @@ class AppStrings {
   static const String path = "path";
   static const String home = "Home";
   static const String employees = "Employees";
+  static const String customers = "Customers";
   static const String reports = "Reports";
   static const String settings = "Settings";
   static const String indianRupee = '\u{20B9}';
