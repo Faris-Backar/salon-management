@@ -11,6 +11,8 @@ class EmployeeNotifier extends StateNotifier<EmployeeState> {
     required this.employeeUsecase,
   }) : super(EmployeeState.initial());
 
+  List<EmployeeEntity> employeeList = [];
+
   createEmployee({required EmployeeEntity employee}) async {
     state = EmployeeState.initial();
     state = EmployeeState.loading();
@@ -61,6 +63,7 @@ class EmployeeNotifier extends StateNotifier<EmployeeState> {
       state = EmployeeState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
+      employeeList = r;
       state = EmployeeState.employeesFetched(employeeList: r);
       return r;
     });

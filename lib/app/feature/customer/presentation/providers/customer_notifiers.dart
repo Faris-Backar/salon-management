@@ -11,6 +11,7 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
   }) : super(CustomerState.initial());
 
   List<CustomerEntity> customers = [];
+  CustomerEntity? selectedCustomer;
 
   createcustomer({required CustomerEntity customer}) async {
     state = CustomerState.initial();
@@ -63,7 +64,6 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
     }, (r) {
       customers = r;
       state = CustomerState.customerFetched(employeeList: r);
-      return r;
     });
   }
 

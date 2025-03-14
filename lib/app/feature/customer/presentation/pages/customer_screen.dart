@@ -1,114 +1,164 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/core/app_core.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/core/routes/app_router.dart';
+import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
+import 'package:salon_management/app/feature/customer/presentation/providers/customer_provider.dart';
 
 @RoutePage()
-class CustomerScreen extends StatelessWidget {
+class CustomerScreen extends ConsumerStatefulWidget {
   const CustomerScreen({super.key});
 
   @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _CustomerScreenState();
+}
+
+class _CustomerScreenState extends ConsumerState<CustomerScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(customerNotifierProvider.notifier).fetchcustomer(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final customerState = ref.watch(customerNotifierProvider);
+    log("$customerState");
     return Scaffold(
       appBar: AppBar(
         title: Text(AppStrings.customers),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search_rounded),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: CustomerSearchDelegate(),
-              );
-            },
-          ),
+          customerState.maybeWhen(
+            customerFetched: (employeeList) => IconButton(
+              icon: Icon(Icons.search_rounded),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomerSearchDelegate(customers: employeeList),
+                );
+              },
+            ),
+            orElse: () => SizedBox.shrink(),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => context.router.pushNamed(AppRouter.createCustomer),
         shape: CircleBorder(),
         child: Icon(Icons.add_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: ListView.separated(
-          itemCount: 10,
-          separatorBuilder: (context, index) => SizedBox(height: 10),
-          itemBuilder: (context, index) => ListTile(
-            tileColor: context.colorScheme.tertiaryContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            title: Text("Customer $index"),
-            subtitle: Text("+91 98765 4321$index"),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
+        child: customerState.maybeMap(
+          customerFetched: (customer) {
+            return ListView.separated(
+              itemCount: customer.employeeList.length,
+              separatorBuilder: (context, index) => SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                final customerDetails = customer.employeeList;
+                return ListTile(
+                  onTap: () {
+                    ref
+                        .read(customerNotifierProvider.notifier)
+                        .selectedCustomer = customerDetails[index];
+                    context.router.pushNamed(AppRouter.customerDetailsScreen);
+                  },
+                  tileColor: context.colorScheme.tertiaryContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  title: Text(customerDetails[index].name),
+                  subtitle: Text(customerDetails[index].mobileNumber),
+                  trailing: Icon(Icons.arrow_forward_ios_rounded),
+                );
+              },
+            );
+          },
+          loading: (value) => Center(
+            child: CircularProgressIndicator.adaptive(),
           ),
+          orElse: () => Text("No Data is Available"),
         ),
       ),
     );
   }
 }
-import 'package:flutter/material.dart';
-import 'package:salon_management/app/features/customers/domain/entities/customer_entity.dart';
 
-class CustomerSearchDelegate extends SearchDelegate {
+class CustomerSearchDelegate extends SearchDelegate<CustomerEntity?> {
   final List<CustomerEntity> customers;
 
-  CustomerSearchDelegate(this.customers);
+  CustomerSearchDelegate({required this.customers});
 
   @override
-  List<Widget>? buildActions(BuildContext context) {
+  List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
-          query = ''; // Clear the search field
+          query = '';
         },
       ),
     ];
   }
 
   @override
-  Widget? buildLeading(BuildContext context) {
+  Widget buildLeading(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, null); // Close search
+        close(context, null);
       },
     );
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return _buildCustomerList();
+    final results = customers.where((customer) {
+      return customer.name.toLowerCase().contains(query.toLowerCase()) ||
+          customer.mobileNumber.contains(query);
+    }).toList();
+
+    return ListView.separated(
+      itemCount: results.length,
+      separatorBuilder: (context, index) => Divider(),
+      itemBuilder: (context, index) {
+        final customer = results[index];
+        return ListTile(
+          title: Text(customer.name),
+          subtitle: Text(customer.mobileNumber),
+          trailing: Icon(Icons.arrow_forward_ios_rounded),
+          onTap: () {
+            close(context, customer);
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return _buildCustomerList();
-  }
-
-  Widget _buildCustomerList() {
-    final filteredCustomers = customers.where((customer) {
-      final name = customer..toLowerCase();
-      final phone = customer.phone;
-      final searchQuery = query.toLowerCase();
-      return name.contains(searchQuery) || phone.contains(searchQuery);
+    final suggestions = customers.where((customer) {
+      return customer.name.toLowerCase().contains(query.toLowerCase()) ||
+          customer.mobileNumber.contains(query);
     }).toList();
 
-    if (filteredCustomers.isEmpty) {
-      return Center(child: Text("No customers found"));
-    }
-
-    return ListView.builder(
-      itemCount: filteredCustomers.length,
+    return ListView.separated(
+      itemCount: suggestions.length,
+      separatorBuilder: (context, index) => Divider(),
       itemBuilder: (context, index) {
-        final customer = filteredCustomers[index];
+        final customer = suggestions[index];
         return ListTile(
           title: Text(customer.name),
-          subtitle: Text(customer.phone),
+          subtitle: Text(customer.mobileNumber),
+          trailing: Icon(Icons.arrow_forward_ios_rounded),
           onTap: () {
-            close(context, customer.name);
+            close(context, customer);
           },
         );
       },

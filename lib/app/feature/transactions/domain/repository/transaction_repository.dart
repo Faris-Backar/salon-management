@@ -6,4 +6,6 @@ import 'package:salon_management/app/feature/transactions/domain/usecase/params/
 abstract class TransactionRepository {
   Future<Either<Failure, List<TransactionEntity>>> getTransactions(
       {required TransactionParams transParams});
+  Future<List<TransactionEntity>> getTransactionsByCustomerId(
+      {required String customerId});
 }

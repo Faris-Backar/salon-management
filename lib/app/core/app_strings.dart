@@ -37,6 +37,7 @@ class AppStrings {
   static const String indianRupee = '\u{20B9}';
   static const String fullName = "Full Name";
   static const String mobileNumber = "Mobile Number";
+  static const String address = "Address";
   static const String currentAddress = "Current Address";
   static const String permanentAddress = "Permanent Address";
   static const String specialisedService = "Specialised Service";
@@ -59,4 +60,8 @@ class AppStrings {
       "Category created successfull";
   static const String transactions = "Transactions";
   static const String updateService = "Update Service";
+  static const String dashBoard = "Dashborad";
+  static const String customerCreatedSuccessfully =
+      "Customer Created Successfully.";
+  static const String filter = "Filter";
 }

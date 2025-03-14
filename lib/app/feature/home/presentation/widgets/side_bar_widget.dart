@@ -119,7 +119,9 @@ class _SidebarState extends State<SidebarWidget> {
                       setState(() {
                         selectedIndex = index;
                       });
-                      context.router.popForced();
+                      // if (!Responsive.isDesktop()) {
+                      //   context.router.popForced();
+                      // }
                       context.router.pushNamed(options[index][AppStrings.path]);
                     },
                     child: Container(

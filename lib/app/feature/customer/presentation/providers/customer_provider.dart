@@ -1,22 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/feature/auth/presentation/providers/auth_provider.dart';
-import 'package:salon_management/app/feature/employee/data/repositories/employee_repository_impl.dart';
-import 'package:salon_management/app/feature/employee/domain/repositories/employee_repository.dart';
-import 'package:salon_management/app/feature/employee/domain/usecases/employee_usecase.dart';
-import 'package:salon_management/app/feature/employee/presentation/providers/employee_notifiers.dart';
-import 'package:salon_management/app/feature/employee/presentation/providers/employee_state.dart';
+import 'package:salon_management/app/feature/customer/data/repositories/customer_repository_impl.dart';
+import 'package:salon_management/app/feature/customer/domain/repositories/customer_repository.dart';
+import 'package:salon_management/app/feature/customer/domain/usecase/customer_usecase.dart';
+import 'package:salon_management/app/feature/customer/presentation/providers/customer_notifiers.dart';
+import 'package:salon_management/app/feature/customer/presentation/providers/customer_state.dart';
 
-final employeeRepositoryProvider = Provider<EmployeeRepository>((ref) =>
-    EmployeeRepositoryImpl(firestore: ref.read(firebaseFirestoreProvider)));
+final customerRepositoryProvider = Provider<CustomerRepository>((ref) =>
+    CustomerRepositoryImpl(firestore: ref.read(firebaseFirestoreProvider)));
 
-final employeeUseCaseProvider = Provider(
+final customerUseCaseProvider = Provider(
   (ref) =>
-      EmployeeUsecase(employeeRepository: ref.read(employeeRepositoryProvider)),
+      CustomerUsecase(customerRepository: ref.read(customerRepositoryProvider)),
 );
 
-final employeeNotifierProvider =
-    StateNotifierProvider<EmployeeNotifier, EmployeeState>(
-  (ref) => EmployeeNotifier(
-    employeeUsecase: ref.read(employeeUseCaseProvider),
+final customerNotifierProvider =
+    StateNotifierProvider<CustomerNotifier, CustomerState>(
+  (ref) => CustomerNotifier(
+    customerUsecase: ref.read(customerUseCaseProvider),
   ),
 );

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/side_bar_widget.dart';
 
@@ -30,23 +31,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktop();
-
     return Scaffold(
       key: _scaffoldKey,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!Responsive.isMobile()) _buildSidebarWithExpansion(),
-          Expanded(
-            flex: isDesktop ? 7 : 1,
-            child: Column(
-              children: [
-                if (isDesktop) _buildAppBar(isDesktop),
-                Expanded(child: AutoRouter()),
-              ],
-            ),
-          ),
+          Expanded(child: AutoRouter()),
         ],
       ),
     );
@@ -67,16 +58,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   AppBar _buildAppBar(bool isDesktop) {
     return AppBar(
       leading: isDesktop
-          ? ValueListenableBuilder<bool>(
-              valueListenable: sideBarExpansionNotifier,
-              builder: (context, isExpanded, child) {
-                return IconButton(
-                  icon: Icon(
-                    isExpanded ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
-                  ),
-                  onPressed: _toggleSidebarExpansion,
-                );
-              },
+          ? AppBar(
+              title: Text(AppStrings.dashBoard),
             )
           : IconButton(
               icon: const Icon(Icons.menu_rounded),
