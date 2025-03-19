@@ -64,4 +64,5 @@ class AppStrings {
   static const String customerCreatedSuccessfully =
       "Customer Created Successfully.";
   static const String filter = "Filter";
+  static const someThingWentWrong = "Something went wrong";
 }
