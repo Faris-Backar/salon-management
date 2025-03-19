@@ -312,10 +312,8 @@ class _BillSectionState extends State<BillSection> {
                           ),
                         ),
                         const SizedBox(height: 10),
-
-                        // Customer List
                         SizedBox(
-                          height: 300, // Limit height for scrolling
+                          height: 300,
                           child: ListView.builder(
                             itemCount: employeeList.length,
                             itemBuilder: (context, index) {

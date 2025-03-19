@@ -65,4 +65,5 @@ class AppStrings {
       "Customer Created Successfully.";
   static const String filter = "Filter";
   static const someThingWentWrong = "Something went wrong";
+  static const String shopDetails = "Shop Details";
 }

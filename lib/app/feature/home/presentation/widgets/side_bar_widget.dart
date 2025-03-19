@@ -69,7 +69,7 @@ class _SidebarState extends State<SidebarWidget> {
     {
       AppStrings.icon: Assets.icons.setting,
       AppStrings.title: AppStrings.settings,
-      AppStrings.path: AppRouter.employeeScreen,
+      AppStrings.path: AppRouter.settings,
     },
   ];
 
