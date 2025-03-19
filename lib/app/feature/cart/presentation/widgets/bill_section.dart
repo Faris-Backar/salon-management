@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/feature/cart/presentation/notifiers/cart/cart_notifier.dart';
+import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
 import 'package:salon_management/app/feature/customer/presentation/providers/customer_provider.dart';
 import 'package:salon_management/app/feature/service_items/domain/enitites/service_item_entity.dart';
 import 'package:salon_management/app/feature/widgets/primary_button.dart';
@@ -90,11 +91,14 @@ class _BillSectionState extends State<BillSection> {
                     const SizedBox(height: 16),
                     const Text("Select Customer:"),
                     GestureDetector(
-                      onTap: () => _showCustomerSelectionSheet(context, ref,
-                          (name, number) {
+                      onTap: () =>
+                          _showCustomerSelectionSheet(context, ref, (customer) {
                         setDialogState(() {
-                          selectedCustomerName = name;
-                          selectedCustomerPhone = number;
+                          selectedCustomerName = customer.name;
+                          selectedCustomerPhone = customer.mobileNumber;
+                          ref
+                              .read(cartNotifierProvider.notifier)
+                              .setCustomerDetails(customer);
                         });
                       }),
                       child: Container(
@@ -264,7 +268,7 @@ class _BillSectionState extends State<BillSection> {
   }
 
   void _showCustomerSelectionSheet(
-      BuildContext context, WidgetRef ref, Function(String, String) onSelect) {
+      BuildContext context, WidgetRef ref, Function(CustomerEntity) onSelect) {
     ref.read(customerNotifierProvider.notifier).fetchcustomer();
 
     showModalBottomSheet(
@@ -322,8 +326,7 @@ class _BillSectionState extends State<BillSection> {
                                 title: Text(customer.name),
                                 subtitle: Text(customer.mobileNumber),
                                 onTap: () {
-                                  onSelect(
-                                      customer.name, customer.mobileNumber);
+                                  onSelect(customer);
                                   Navigator.pop(context);
                                 },
                               );
