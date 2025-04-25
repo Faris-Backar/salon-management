@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/side_bar_widget.dart';
 
@@ -55,18 +54,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  AppBar _buildAppBar(bool isDesktop) {
-    return AppBar(
-      leading: isDesktop
-          ? AppBar(
-              title: Text(AppStrings.dashBoard),
-            )
-          : IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-            ),
-    );
-  }
+  // AppBar _buildAppBar(bool isDesktop) {
+  //   return AppBar(
+  //     leading: isDesktop
+  //         ? AppBar(
+  //             title: Text(AppStrings.dashBoard),
+  //           )
+  //         : IconButton(
+  //             icon: const Icon(Icons.menu_rounded),
+  //             onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+  //           ),
+  //   );
+  // }
 
   void _toggleSidebarExpansion() {
     sideBarExpansionNotifier.value = !sideBarExpansionNotifier.value;

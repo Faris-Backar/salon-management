@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:salon_management/app/core/app_core.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/core/routes/app_router.dart';
 
 @RoutePage()
 class SettingsScreen extends StatelessWidget {
@@ -23,8 +24,23 @@ class SettingsScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
-              trailing: Icon(Icons.arrow_forward_ios_rounded),
-            )
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () {
+                context.router.pushNamed(AppRouter.shopDetails);
+              },
+            ),
+            const SizedBox(height: 8),
+            ListTile(
+              tileColor: context.colorScheme.surfaceContainerHighest,
+              title: const Text('Expenses'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () {
+                context.router.pushNamed(AppRouter.expenses);
+              },
+            ),
           ],
         ),
       ),

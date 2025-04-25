@@ -20,6 +20,7 @@ class HomeScreenAppbar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final categoriesState = ref.read(categoryNotifierProvider);
     return AppBar(
+      automaticallyImplyLeading: Responsive.isDesktop() ? false : true,
       toolbarHeight: Responsive.isDesktop() ? kMinInteractiveDimension : null,
       backgroundColor: Theme.of(context).appBarTheme.surfaceTintColor,
       title: const Text('Home'),

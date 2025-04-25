@@ -33,6 +33,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/team.svg
   String get team => 'assets/icons/team.svg';
 
+  /// File path: assets/icons/transaction.svg
+  String get transaction => 'assets/icons/transaction.svg';
+
+  /// File path: assets/icons/user.svg
+  String get user => 'assets/icons/user.svg';
+
   /// List of all assets
   List<String> get values => [
     category,
@@ -42,6 +48,8 @@ class $AssetsIconsGen {
     report,
     setting,
     team,
+    transaction,
+    user,
   ];
 }
 

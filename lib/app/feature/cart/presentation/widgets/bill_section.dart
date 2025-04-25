@@ -4,22 +4,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:salon_management/gen/assets.gen.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/feature/cart/presentation/notifiers/cart/cart_notifier.dart';
 import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
 import 'package:salon_management/app/feature/customer/presentation/providers/customer_provider.dart';
 import 'package:salon_management/app/feature/service_items/domain/enitites/service_item_entity.dart';
+import 'package:salon_management/app/feature/settings/data/services/shop_details_service.dart';
 import 'package:salon_management/app/feature/widgets/primary_button.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class BillSection extends StatefulWidget {
-  final String shopName;
-  final String shopLogo;
-  final String contactNumber;
-  final String email;
-  final String address;
-  final String slogan;
+class BillSection extends ConsumerStatefulWidget {
   final List<ServiceItemEntity> selectedServices;
   final String customerName;
   final String customerPhoneNumber;
@@ -29,12 +26,6 @@ class BillSection extends StatefulWidget {
   final Function(double, String) onCheckout;
 
   const BillSection({
-    required this.shopName,
-    required this.shopLogo,
-    required this.contactNumber,
-    required this.email,
-    required this.address,
-    required this.slogan,
     required this.selectedServices,
     required this.customerName,
     required this.customerPhoneNumber,
@@ -46,10 +37,10 @@ class BillSection extends StatefulWidget {
   });
 
   @override
-  _BillSectionState createState() => _BillSectionState();
+  ConsumerState<BillSection> createState() => _BillSectionState();
 }
 
-class _BillSectionState extends State<BillSection> {
+class _BillSectionState extends ConsumerState<BillSection> {
   final TextEditingController _amountController = TextEditingController();
   String _selectedPaymentMethod = "CASH";
 
@@ -59,7 +50,7 @@ class _BillSectionState extends State<BillSection> {
     _amountController.text = widget.totalAmount.toStringAsFixed(2);
   }
 
-  void _showCheckoutDialog(BuildContext context, WidgetRef ref) {
+  void _showCheckoutDialog(BuildContext context) {
     bool sendToWhatsApp = false;
     String? selectedCustomerName;
     String? selectedCustomerPhone;
@@ -92,7 +83,7 @@ class _BillSectionState extends State<BillSection> {
                     const Text("Select Customer:"),
                     GestureDetector(
                       onTap: () =>
-                          _showCustomerSelectionSheet(context, ref, (customer) {
+                          _showCustomerSelectionSheet(context, (customer) {
                         setDialogState(() {
                           selectedCustomerName = customer.name;
                           selectedCustomerPhone = customer.mobileNumber;
@@ -148,7 +139,7 @@ class _BillSectionState extends State<BillSection> {
                                 ),
                                 color: _selectedPaymentMethod == "CASH"
                                     ? context.colorScheme.primary
-                                        .withOpacity(0.2)
+                                        .withValues(alpha: 0.2)
                                     : context.colorScheme.surfaceContainer,
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -176,7 +167,7 @@ class _BillSectionState extends State<BillSection> {
                                 ),
                                 color: _selectedPaymentMethod == "ONLINE"
                                     ? context.colorScheme.primary
-                                        .withOpacity(0.2)
+                                        .withValues(alpha: 0.2)
                                     : context.colorScheme.surfaceContainer,
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -268,7 +259,7 @@ class _BillSectionState extends State<BillSection> {
   }
 
   void _showCustomerSelectionSheet(
-      BuildContext context, WidgetRef ref, Function(CustomerEntity) onSelect) {
+      BuildContext context, Function(CustomerEntity) onSelect) {
     ref.read(customerNotifierProvider.notifier).fetchcustomer();
 
     showModalBottomSheet(
@@ -349,33 +340,46 @@ class _BillSectionState extends State<BillSection> {
 
   void _sendBillToWhatsApp(
       double amount, String customerName, String customerPhone) async {
-    String message = """
-  *Salon Bill*
-  🏢 ${widget.shopName}
-  📍 ${widget.address}
-  📞 ${widget.contactNumber}
-  
-  👤 Customer: $customerName - $customerPhone
-  👨‍💼 Employee: ${widget.employeeName}
+    final shopDetails = ref.read(shopDetailsStreamProvider).value;
 
-  🛒 Services:
-  ${widget.selectedServices.asMap().entries.map((entry) => "${entry.key + 1}. ${entry.value.name} - ₹${entry.value.price}").join("\n")}
+    try {
+      final message = """
+*${shopDetails?.name ?? 'My Salon'}*
+${shopDetails?.address ?? ''}
+Contact: ${shopDetails?.mobileNumber ?? ''}
+${shopDetails?.email?.isNotEmpty == true ? 'Email: ${shopDetails?.email}\n' : ''}
 
-  💰 Total: ₹${amount.toStringAsFixed(2)}
-  💳 Payment Method: $_selectedPaymentMethod
-  
-  🏷 Thank you for visiting!
-  """;
+------------------
+*Invoice #TEMP*
+Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}
+Customer: $customerName
 
-    String url =
-        "https://wa.me/${customerPhone != 'N/A' ? customerPhone : widget.contactNumber}?text=${Uri.encodeComponent(message)}";
+*Items:*
+${widget.selectedServices.asMap().entries.map((entry) => "${entry.value.name}: ₹${entry.value.price}").join("\n")}
 
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
+*Total: ₹${amount.toStringAsFixed(2)}*
+Payment Method: $_selectedPaymentMethod
+
+Thank you for your business!
+Visit us again soon.
+""";
+
+      String url =
+          "https://wa.me/${customerPhone != 'N/A' ? customerPhone : shopDetails?.mobileNumber ?? ''}?text=${Uri.encodeComponent(message)}";
+
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Could not open WhatsApp")),
+          );
+        }
+      }
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Could not open WhatsApp")),
+          SnackBar(content: Text("Error generating WhatsApp message: $e")),
         );
       }
     }
@@ -383,91 +387,109 @@ class _BillSectionState extends State<BillSection> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: context.colorScheme.surfaceBright,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(child: Image.asset(widget.shopLogo, height: 150)),
-            const SizedBox(height: 8),
-            Text(widget.shopName,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text(widget.address),
-            Text("Contact: ${widget.contactNumber}"),
-            const Divider(thickness: 2),
-            Text(
-                "Customer: ${widget.customerName} - ${widget.customerPhoneNumber}"),
-            Text("Employee: ${widget.employeeName}"),
-            const Divider(thickness: 2),
-            const Text("Services:"),
-            Expanded(
-              child: Consumer(builder: (context, WidgetRef ref, child) {
-                return ListView.builder(
-                  itemCount: widget.selectedServices.length,
-                  itemBuilder: (context, index) {
-                    final service = widget.selectedServices[index];
-                    return Slidable(
-                      key: ValueKey(service.uid),
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) => ref
-                                .read(cartNotifierProvider.notifier)
-                                .removeService(index),
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            label: 'Remove',
-                          ),
-                        ],
-                      ),
-                      child: ListTile(
-                        title: Text("${index + 1}. ${service.name}"),
-                        trailing: Text("₹${service.price}"),
-                      ),
-                    );
-                  },
-                );
-              }),
-            ),
-            const Divider(thickness: 2),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text("Total: ₹${widget.totalAmount.toStringAsFixed(2)}",
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(widget.slogan,
-                  style: const TextStyle(fontStyle: FontStyle.italic)),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    final shopDetailsAsyncValue = ref.watch(shopDetailsStreamProvider);
+
+    return shopDetailsAsyncValue.when(
+      data: (shopDetails) {
+        return SafeArea(
+          child: Container(
+            color: context.colorScheme.surfaceBright,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                PrimaryButton(
-                  onPressed: _showClearConfirmationDialog,
-                  isOutlineButton: true,
-                  child: const Text("Clear"),
+                if (shopDetails.logoUrl != null &&
+                    shopDetails.logoUrl!.isNotEmpty)
+                  Center(
+                      child: Image.network(shopDetails.logoUrl!, height: 150))
+                else
+                  Center(
+                      child: Image.asset(Assets.images.logoWithName.path,
+                          height: 150)),
+                const SizedBox(height: 8),
+                Text(shopDetails.name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(shopDetails.address),
+                Text("Contact: ${shopDetails.mobileNumber}"),
+                if (shopDetails.email != null && shopDetails.email!.isNotEmpty)
+                  Text("Email: ${shopDetails.email}"),
+                const Divider(thickness: 2),
+                Text(
+                    "Customer: ${widget.customerName} - ${widget.customerPhoneNumber}"),
+                Text("Employee: ${widget.employeeName}"),
+                const Divider(thickness: 2),
+                const Text("Services:"),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.selectedServices.length,
+                    itemBuilder: (context, index) {
+                      final service = widget.selectedServices[index];
+                      return Slidable(
+                        key: ValueKey(service.uid),
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (context) => ref
+                                  .read(cartNotifierProvider.notifier)
+                                  .removeService(index),
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete,
+                              label: 'Remove',
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text("${index + 1}. ${service.name}"),
+                          trailing: Text("₹${service.price}"),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                Consumer(builder: (context, ref, child) {
-                  return PrimaryButton(
-                    onPressed: widget.selectedServices.isEmpty
-                        ? null
-                        : () => _showCheckoutDialog(context, ref),
-                    label: "Checkout",
-                  );
-                }),
+                const Divider(thickness: 2),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                      "Total: ₹${widget.totalAmount.toStringAsFixed(2)}",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 16),
+                if (shopDetails.slogan != null &&
+                    shopDetails.slogan!.isNotEmpty)
+                  Center(
+                    child: Text(shopDetails.slogan!,
+                        style: const TextStyle(fontStyle: FontStyle.italic)),
+                  ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    PrimaryButton(
+                      onPressed: _showClearConfirmationDialog,
+                      isOutlineButton: true,
+                      child: const Text("Clear"),
+                    ),
+                    PrimaryButton(
+                      onPressed: widget.selectedServices.isEmpty
+                          ? null
+                          : () => _showCheckoutDialog(context),
+                      label: "Checkout",
+                    ),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => Center(
+        child: Text("Error loading shop details: $error"),
       ),
     );
   }

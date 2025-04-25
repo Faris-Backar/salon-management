@@ -97,8 +97,11 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
         return false;
       }
       if (_serviceName != null && _serviceName!.isNotEmpty) {
-        bool serviceFound = transaction.selectedServices.any((service) =>
-            service.name.toLowerCase().contains(_serviceName!.toLowerCase()));
+        bool serviceFound = transaction.selectedServices?.any((service) =>
+                service.name
+                    .toLowerCase()
+                    .contains(_serviceName!.toLowerCase())) ??
+            false;
         if (!serviceFound) {
           return false;
         }
@@ -509,8 +512,8 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
   }
 
   Widget _buildTransactionCard(TransactionEntity transaction, ThemeData theme) {
-    final totalServices = transaction.selectedServices.length;
-    final mainService = transaction.selectedServices.first;
+    final totalServices = transaction.selectedServices?.length ?? 0;
+    final mainService = transaction.selectedServices?.firstOrNull;
     final additionalServices = totalServices > 1 ? totalServices - 1 : 0;
 
     return InkWell(
@@ -539,7 +542,7 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    mainService.name,
+                    mainService?.name ?? '',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -551,7 +554,7 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
                       Icon(Icons.person, size: 14, color: Colors.grey[600]),
                       SizedBox(width: 4),
                       Text(
-                        transaction.employee,
+                        transaction.employee?.fullname ?? '',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 14,
@@ -667,8 +670,10 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
                   DateFormat('MMMM d, yyyy').format(transaction.createdAt)),
               _buildDetailItem('Transaction Time',
                   DateFormat('h:mm a').format(transaction.createdAt)),
-              _buildDetailItem('Employee', transaction.employee),
-              _buildDetailItem('Payment Method', transaction.paymentMethod),
+              _buildDetailItem(
+                  'Employee', transaction.employee?.fullname ?? ''),
+              _buildDetailItem(
+                  'Payment Method', transaction.paymentMethod ?? ""),
               Divider(),
               Text(
                 'Services',
@@ -681,14 +686,14 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
               Expanded(
                 child: ListView.separated(
                   shrinkWrap: true,
-                  itemCount: transaction.selectedServices.length,
+                  itemCount: transaction.selectedServices?.length ?? 0,
                   separatorBuilder: (context, index) => Divider(height: 1),
                   itemBuilder: (context, index) {
-                    final service = transaction.selectedServices[index];
+                    final service = transaction.selectedServices?[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text(service.name),
-                      trailing: Text('\$${service.price}'),
+                      title: Text(service?.name ?? ''),
+                      trailing: Text('\$${service?.price ?? 0}'),
                     );
                   },
                 ),

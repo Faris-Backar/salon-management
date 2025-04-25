@@ -1,20 +1,34 @@
 import 'package:salon_management/app/feature/employee/domain/entities/employee_enitity.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'employee.freezed.dart';
-part 'employee.g.dart';
+class Employee extends EmployeeEntity {
+  Employee({
+    required super.uid,
+    required super.fullname,
+    required super.mobile,
+    required super.contactAddress,
+    required super.permenentAddress,
+    required super.specialisation,
+  });
 
-@freezed
-class Employee extends EmployeeEntity with _$Employee {
-  const factory Employee({
-    required String uid,
-    required String fullname,
-    required String mobile,
-    required String contactAddress,
-    required String permenentAddress,
-    required String specialisation,
-  }) = _Employee;
-
-  factory Employee.fromJson(Map<String, dynamic> json) =>
-      _$EmployeeFromJson(json);
+  factory Employee.fromJson(Map<String, dynamic> json) {
+    return Employee(
+      uid: json['uid'] as String,
+      fullname: json['fullname'] as String,
+      mobile: json['mobile'] as String,
+      contactAddress: json['contactAddress'] as String,
+      permenentAddress: json['permenentAddress'] as String,
+      specialisation: json['specialisation'] as String,
+    );
+  }
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'fullname': fullname,
+      'mobile': mobile,
+      'contactAddress': contactAddress,
+      'permenentAddress': permenentAddress,
+      'specialisation': specialisation,
+    };
+  }
 }

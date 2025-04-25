@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:salon_management/app/core/error/failure.dart';
 import 'package:salon_management/app/core/resources/firebase_resources.dart';
 import 'package:salon_management/app/core/utils/firebase_utils.dart';
+import 'package:salon_management/app/feature/service_items/domain/enitites/service_item_entity.dart';
 import 'package:salon_management/app/feature/transactions/data/model/transaction_model.dart';
 import 'package:salon_management/app/feature/transactions/domain/entity/transaction_entity.dart';
 import 'package:salon_management/app/feature/transactions/domain/repository/transaction_repository.dart';
@@ -27,9 +28,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
           .where('createdAt',
               isLessThanOrEqualTo: Timestamp.fromDate(transParams.toDate))
           .get();
-      List<TransactionEntity> transactions = querySnapshot.docs
-          .map((doc) => TransactionModel.fromJson(doc.data()))
-          .toList();
+      List<TransactionEntity> transactions = querySnapshot.docs.map((doc) {
+        log("transactions => ${doc.data()}");
+        return TransactionModel.fromJson(doc.data());
+      }).toList();
       return Right(transactions);
     } on FirebaseException catch (e) {
       log("here in firebase exception ${e.message}");
@@ -59,9 +61,12 @@ class TransactionRepositoryImpl implements TransactionRepository {
           employee: doc['employee'],
           paymentMethod: doc['paymentMethod'],
           discountAmount: (doc['discountAmount'] as num).toDouble(),
-          totalAmount: (doc['totalAmount'] as num).toDouble(),
+          amount: (doc['amount'] as num).toDouble(),
+          type: doc['type'],
+          expenseCategory: doc['expenseCategory'],
+          expenseDescription: doc['expenseDescription'],
           selectedServices: (doc['selectedServices'] as List<dynamic>)
-              .map((service) => Service(
+              .map((service) => ServiceItemEntity(
                     uid: service['uid'],
                     categoryUid: service['categoryUid'],
                     categoryName: service['categoryName'],

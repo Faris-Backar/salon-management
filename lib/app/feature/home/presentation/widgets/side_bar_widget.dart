@@ -37,12 +37,12 @@ class _SidebarState extends State<SidebarWidget> {
       AppStrings.path: AppRouter.homeScreen,
     },
     {
-      AppStrings.icon: Assets.icons.team,
+      AppStrings.icon: Assets.icons.transaction,
       AppStrings.title: AppStrings.transactions,
       AppStrings.path: AppRouter.transactionScreen,
     },
     {
-      AppStrings.icon: Assets.icons.team,
+      AppStrings.icon: Assets.icons.user,
       AppStrings.title: AppStrings.employees,
       AppStrings.path: AppRouter.employeeScreen,
     },

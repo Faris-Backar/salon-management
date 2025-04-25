@@ -3,9 +3,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:salon_management/app/feature/transactions/domain/entity/transaction_entity.dart';
+import 'package:uuid/uuid.dart';
+
+import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
-import 'package:salon_management/app/feature/cart/domain/entities/bill_entities.dart';
+import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/cart/presentation/notifiers/cart/cart_notifier.dart';
 import 'package:salon_management/app/feature/cart/presentation/notifiers/cart/cart_state.dart';
 import 'package:salon_management/app/feature/cart/presentation/notifiers/checkout/checkout_notifier.dart';
@@ -14,12 +17,9 @@ import 'package:salon_management/app/feature/cart/presentation/widgets/bill_sect
 import 'package:salon_management/app/feature/category/presentation/providers/category_provider.dart';
 import 'package:salon_management/app/feature/employee/presentation/providers/employee_provider.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/home_screen_appbar.dart';
-import 'package:salon_management/app/feature/service_items/presentation/providers/service_provider.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/side_bar_widget.dart';
-import 'package:salon_management/app/core/utils/responsive.dart';
-import 'package:salon_management/app/core/app_strings.dart';
+import 'package:salon_management/app/feature/service_items/presentation/providers/service_provider.dart';
 import 'package:salon_management/gen/assets.gen.dart';
-import 'package:uuid/uuid.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
@@ -88,7 +88,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
         },
         success: () {
-          Navigator.pop(context);
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -100,9 +99,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      ref.read(cartNotifierProvider.notifier).clearCart();
+                      final cartNotifier =
+                          ref.read(cartNotifierProvider.notifier);
+
+                      cartNotifier.clearCart();
                       context.router.popForced();
                       context.router.popForced();
+                      // Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
                     },
                     child: const Text("OK"),
                   ),
@@ -467,24 +471,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   _buildBillWidget({required CartState cartState}) {
     return BillSection(
       selectedServices: cartState.selectedServices,
-      shopName: "Bellozee",
-      shopLogo: Assets.images.logo.path,
-      contactNumber: "+919087654321",
-      email: "info@bellozee.com",
-      address: "Some Address",
-      slogan: "Thank you, visit again.",
       customerName: cartState.customer?.name ?? "Guest",
       customerPhoneNumber: cartState.customer?.mobileNumber ?? "N/A",
       employeeName: cartState.employee?.fullname ?? "Not Assigned",
       totalAmount: ref.read(cartNotifierProvider.notifier).totalAmount,
       onCheckout: (amount, paymentMethod) {
         final uid = const Uuid().v8();
-        final bill = BillEntities(
+        final bill = TransactionEntity(
+          type: TransactionType.income,
           uid: uid,
           selectedServices: cartState.selectedServices,
           customer: cartState.customer,
           employee: cartState.employee,
-          totalAmount: amount,
+          amount: amount,
           discountAmount: 0.0,
           paymentMethod: paymentMethod,
           createdAt: DateTime.now(),

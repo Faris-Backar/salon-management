@@ -59,6 +59,14 @@ class AppRouter extends RootStackRouter {
               page: SettingsRoute.page,
               path: settings,
             ),
+            AutoRoute(
+              page: ExpensesRoute.page,
+              path: expenses,
+            ),
+            AutoRoute(
+              page: ShopDetailsRoute.page,
+              path: shopDetails,
+            ),
           ],
         ),
       ];
@@ -78,6 +86,8 @@ class AppRouter extends RootStackRouter {
   static const String createCustomer = "createCustomer";
   static const String customerDetailsScreen = "CustomerDetailsScreen";
   static const String settings = "settings";
+  static const String expenses = "expenses";
+  static const String shopDetails = 'shop-details';
 }
 
 class AuthGuard extends AutoRouteGuard {

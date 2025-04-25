@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/feature/auth/presentation/providers/auth_provider.dart';
 import 'package:salon_management/app/feature/transactions/data/repositories/transaction_repositories_impl.dart';
@@ -32,3 +33,19 @@ final totalAmountProvider = Provider<double>((ref) {
   final transactions = ref.watch(transactionsProvider).asData?.value ?? [];
   return transactions.fold(0.0, (sum, item) => sum + (item.totalAmount));
 });
+
+class DateRangeNotifier extends StateNotifier<DateTimeRange> {
+  DateRangeNotifier()
+      : super(DateTimeRange(
+          start: DateTime.now().subtract(const Duration(days: 1)),
+          end: DateTime.now(),
+        ));
+
+  void updateDateRange(DateTime from, DateTime to) {
+    state = DateTimeRange(start: from, end: to);
+  }
+}
+
+DateTime updateFromDate(DateTime fromDate) {
+  return fromDate;
+}
