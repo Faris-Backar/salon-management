@@ -23,22 +23,22 @@ class ReadDatabaseFailure extends Failure {
 // Firebase-specific authentication failures
 class FirebaseAuthFailure extends Failure {
   const FirebaseAuthFailure({String? message})
-      : super("An unknown FirebaseAuth error occurred.");
+      : super(message ?? "An unknown FirebaseAuth error occurred.");
 }
 
 class InvalidEmailFailure extends FirebaseAuthFailure {
   const InvalidEmailFailure({String? message})
-      : super(message: "The email address is not valid.");
+      : super(message: message ?? "The email address is not valid.");
 }
 
 class WrongPasswordFailure extends FirebaseAuthFailure {
   const WrongPasswordFailure({String? message})
-      : super(message: "The password is incorrect.");
+      : super(message: message ?? "The password is incorrect.");
 }
 
 class UserNotFoundFailure extends FirebaseAuthFailure {
   const UserNotFoundFailure({String? message})
-      : super(message: "User with this email does not exist.");
+      : super(message: message ?? "User with this email does not exist.");
 }
 
 class InvalidCredentialFailure extends Failure {
@@ -47,20 +47,20 @@ class InvalidCredentialFailure extends Failure {
 
 class UserDisabledFailure extends FirebaseAuthFailure {
   const UserDisabledFailure({String? message})
-      : super(message: "This user has been disabled.");
+      : super(message: message ?? "This user has been disabled.");
 }
 
 class TooManyRequestsFailure extends FirebaseAuthFailure {
   const TooManyRequestsFailure({String? message})
-      : super(message: "Too many requests. Try again later.");
+      : super(message: message ?? "Too many requests. Try again later.");
 }
 
 class OperationNotAllowedFailure extends FirebaseAuthFailure {
   const OperationNotAllowedFailure({String? message})
-      : super(message: "Operation not allowed.");
+      : super(message: message ?? "Operation not allowed.");
 }
 
 class WeakPasswordFailure extends FirebaseAuthFailure {
   const WeakPasswordFailure({String? message})
-      : super(message: "The password is too weak.");
+      : super(message: message ?? "The password is too weak.");
 }

@@ -1,18 +1,14 @@
 class UserEntity {
-  final String uid;
-  final String firstName;
-  final String lastName;
+  final String id;
   final String email;
-  final int empNo;
+  final bool isActive;
+  final bool isAdmin;
   final DateTime createdAt;
-  final String mobileNumber;
-
-  UserEntity(
-      {required this.uid,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.empNo,
-      required this.createdAt,
-      required this.mobileNumber});
+  UserEntity({
+    required this.id,
+    required this.email,
+    required this.isActive,
+    required this.isAdmin,
+    required this.createdAt,
+  });
 }

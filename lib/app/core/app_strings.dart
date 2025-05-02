@@ -2,6 +2,7 @@ class AppStrings {
   AppStrings._();
 
   static const String title = "Belloze";
+  static const String isAdminOnly = "isAdminOnly";
 
   static const String welcomeBack = "Welcome Back";
   static const String login = "Login";
@@ -18,6 +19,8 @@ class AppStrings {
       "Enter your email and password to access your account.";
   static const String enterEmail = "Please enter your email";
   static const String enterPassword = "Please enter your password";
+  static const String pleaseConfirmPassword = "Please Confirm Password";
+  static const String confirmPassword = "Confirm Password";
   static const String donthaveAnAccount = "Don't have an account? ";
   static const String alreadyHaveanAccount = "Already have an account? ";
   static const String emailCannotBeEmpty = "Email cannot be empty";

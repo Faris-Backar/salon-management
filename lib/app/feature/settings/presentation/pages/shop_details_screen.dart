@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:salon_management/app/core/app_core.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/core/utils/app_snackbar.dart';
 import 'package:salon_management/app/feature/settings/data/services/shop_details_service.dart';

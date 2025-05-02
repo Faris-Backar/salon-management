@@ -6,4 +6,6 @@ import 'package:salon_management/app/feature/auth/domain/usecases/params/login_p
 abstract class AuthRepository {
   Future<Either<Failure, UserEntity>> signInwithEmail(
       {required LoginParams loginParams});
+  Future<Either<Failure, UserEntity>> registerWithEmail(
+      {required LoginParams loginParams});
 }

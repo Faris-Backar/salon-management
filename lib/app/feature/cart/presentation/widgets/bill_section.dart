@@ -385,6 +385,83 @@ Visit us again soon.
     }
   }
 
+  void _showUpdateAmountDialog(
+      BuildContext context, ServiceItemEntity service, int index) {
+    final TextEditingController amountController =
+        TextEditingController(text: service.price);
+    final TextEditingController remarkController =
+        TextEditingController(text: service.remark);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Update Amount for ${service.name}"),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    prefixText: "₹ ",
+                    border: OutlineInputBorder(),
+                    labelText: "New Amount",
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: remarkController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Remark (Optional)",
+                    alignLabelWithHint: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newAmount = double.tryParse(amountController.text);
+                if (newAmount != null && newAmount >= 0) {
+                  final updatedService = ServiceItemEntity(
+                    uid: service.uid,
+                    name: service.name,
+                    price: newAmount.toStringAsFixed(2),
+                    categoryName: service.categoryName,
+                    categoryUid: service.categoryUid,
+                    isActive: service.isActive,
+                    remark: remarkController.text.trim().isEmpty
+                        ? null
+                        : remarkController.text.trim(),
+                  );
+                  ref
+                      .read(cartNotifierProvider.notifier)
+                      .updateService(index, updatedService);
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Please enter a valid amount")),
+                  );
+                }
+              },
+              child: const Text("Update"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final shopDetailsAsyncValue = ref.watch(shopDetailsStreamProvider);
@@ -442,8 +519,29 @@ Visit us again soon.
                           ],
                         ),
                         child: ListTile(
-                          title: Text("${index + 1}. ${service.name}"),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${index + 1}. ${service.name}"),
+                              if (service.remark != null &&
+                                  service.remark!.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Text(
+                                    service.remark!,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: context.colorScheme.onSurface
+                                          .withOpacity(0.7),
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                           trailing: Text("₹${service.price}"),
+                          onTap: () =>
+                              _showUpdateAmountDialog(context, service, index),
                         ),
                       );
                     },

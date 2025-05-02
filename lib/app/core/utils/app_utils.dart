@@ -10,6 +10,8 @@ class AppUtils {
           behavior: SnackBarBehavior.floating,
           content: Text(
             content,
-            style: context.textTheme.bodySmall,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: Colors.black,
+            ),
           )));
 }

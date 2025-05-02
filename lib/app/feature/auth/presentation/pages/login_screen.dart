@@ -1,9 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/core/app_core.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/core/routes/app_router.dart';
+import 'package:salon_management/app/core/routes/app_router.gr.dart';
+import 'package:salon_management/app/core/utils/app_utils.dart';
 import 'package:salon_management/app/core/utils/form_utils.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
+import 'package:salon_management/app/feature/auth/presentation/providers/auth_provider.dart';
+import 'package:salon_management/app/feature/auth/presentation/providers/auth_state.dart';
 import 'package:salon_management/app/feature/auth/presentation/widgets/login_button.dart';
 import 'package:salon_management/app/feature/widgets/custom_text_field.dart';
 
@@ -24,48 +30,63 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     bool isMobile = Responsive.isMobile();
-
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 20.0 : 80.0),
-          child: Card(
-            elevation: isMobile ? 0 : 5,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(32.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _buildHeader(context),
-                      const SizedBox(height: 30),
-                      _buildEmailField(),
-                      const SizedBox(height: 30),
-                      _PasswordField(
-                        controller: _passwordController,
-                        visibilityNotifier: _passwordVisibilityNotifier,
-                      ),
-                      const SizedBox(height: 50),
-                      LoginButton(
-                        formKey: _formKey,
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildSignupPrompt(),
-                    ],
+    return Consumer(builder: (ctx, ref, child) {
+      ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+        next.maybeWhen(
+          error: (message) {
+            AppUtils.showSnackBar(ctx,
+                content: message, isForErrorMessage: true);
+          },
+          authenticated: (user) {
+            AppUtils.showSnackBar(ctx,
+                content: AppStrings.successLogin, isForErrorMessage: false);
+            context.router.replaceAll([const HomeRoute()]);
+          },
+          orElse: () {},
+        );
+      });
+      return Scaffold(
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 20.0 : 80.0),
+            child: Card(
+              elevation: isMobile ? 0 : 5,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _buildHeader(context),
+                        const SizedBox(height: 30),
+                        _buildEmailField(),
+                        const SizedBox(height: 30),
+                        _PasswordField(
+                          controller: _passwordController,
+                          visibilityNotifier: _passwordVisibilityNotifier,
+                        ),
+                        const SizedBox(height: 50),
+                        LoginButton(
+                          formKey: _formKey,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                        ),
+                        const SizedBox(height: 20),
+                        _buildSignupPrompt(),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildHeader(BuildContext context) {
@@ -104,9 +125,12 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text("${AppStrings.dontHaveAnAccount}?"),
-        Text(
-          " ${AppStrings.register}",
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        InkWell(
+          onTap: () => context.router.pushNamed(AppRouter.registerScreen),
+          child: Text(
+            " ${AppStrings.register}",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );

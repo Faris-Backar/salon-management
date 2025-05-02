@@ -14,6 +14,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: LoginRoute.page, path: loginScreen),
         AutoRoute(page: CreateCategoryRoute.page, path: createCategoryScreen),
         AutoRoute(page: CreateServiceItemRoute.page, path: createServiceScreen),
+        AutoRoute(page: RegisterRoute.page, path: registerScreen),
         AutoRoute(
           page: DashboardRoute.page,
           path: dashBoardScreen,
@@ -67,6 +68,10 @@ class AppRouter extends RootStackRouter {
               page: ShopDetailsRoute.page,
               path: shopDetails,
             ),
+            AutoRoute(
+              page: RegisteredUsersRoute.page,
+              path: registeredUsers,
+            ),
           ],
         ),
       ];
@@ -88,6 +93,8 @@ class AppRouter extends RootStackRouter {
   static const String settings = "settings";
   static const String expenses = "expenses";
   static const String shopDetails = 'shop-details';
+  static const String registerScreen = '/register';
+  static const String registeredUsers = 'registered-users';
 }
 
 class AuthGuard extends AutoRouteGuard {
@@ -99,7 +106,7 @@ class AuthGuard extends AutoRouteGuard {
     if (isAuthenticated) {
       resolver.next();
     } else {
-      router.replaceNamed(AppRouter.loginScreen);
+      resolver.redirect(const LoginRoute());
     }
   }
 }

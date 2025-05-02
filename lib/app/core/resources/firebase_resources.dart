@@ -6,4 +6,5 @@ class FirebaseResources {
   static const String serviceItem = "serviceItem";
   static const String category = "category";
   static const String transactions = "transactions";
+  static const String registeredUsers = "registered-users";
 }

@@ -7,6 +7,7 @@ class ServiceItemEntity {
   final String categoryName;
   final String categoryUid;
   final bool isActive;
+  final String? remark;
 
   ServiceItemEntity(
       {required this.categoryName,
@@ -14,7 +15,8 @@ class ServiceItemEntity {
       required this.uid,
       required this.name,
       required this.price,
-      required this.isActive});
+      required this.isActive,
+      this.remark});
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,6 +26,7 @@ class ServiceItemEntity {
       'categoryName': categoryName,
       'categoryUid': categoryUid,
       'isActive': isActive,
+      'remark': remark,
     };
   }
 
@@ -35,6 +38,7 @@ class ServiceItemEntity {
       categoryName: map['categoryName'] ?? '',
       categoryUid: map['categoryUid'] ?? '',
       isActive: map['isActive'] ?? false,
+      remark: map['remark'],
     );
   }
 
@@ -50,6 +54,7 @@ class ServiceItemEntity {
     String? categoryName,
     String? categoryUid,
     bool? isActive,
+    String? remark,
   }) {
     return ServiceItemEntity(
       uid: uid ?? this.uid,
@@ -58,6 +63,7 @@ class ServiceItemEntity {
       categoryName: categoryName ?? this.categoryName,
       categoryUid: categoryUid ?? this.categoryUid,
       isActive: isActive ?? this.isActive,
+      remark: remark ?? this.remark,
     );
   }
 }

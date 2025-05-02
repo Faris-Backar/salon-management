@@ -19,7 +19,6 @@ import 'package:salon_management/app/feature/employee/presentation/providers/emp
 import 'package:salon_management/app/feature/home/presentation/widgets/home_screen_appbar.dart';
 import 'package:salon_management/app/feature/home/presentation/widgets/side_bar_widget.dart';
 import 'package:salon_management/app/feature/service_items/presentation/providers/service_provider.dart';
-import 'package:salon_management/gen/assets.gen.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
@@ -334,15 +333,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                               padding:
                                                   const EdgeInsets.all(5.0),
-                                              child: const Column(
+                                              child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  Text('Service Name'),
                                                   Text(
-                                                      '${AppStrings.indianRupee}100'),
+                                                    serviceItems[index].name,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  Text(
+                                                    '${AppStrings.indianRupee}${serviceItems[index].price}',
+                                                    textAlign: TextAlign.center,
+                                                  ),
                                                 ],
                                               ),
                                             ),

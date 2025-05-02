@@ -18,6 +18,12 @@ class CartNotifier extends StateNotifier<CartState> {
     state = state.copyWith(selectedServices: updatedServices);
   }
 
+  void updateService(int index, ServiceItemEntity updatedService) {
+    final updatedServices = [...state.selectedServices];
+    updatedServices[index] = updatedService;
+    state = state.copyWith(selectedServices: updatedServices);
+  }
+
   void setCustomerDetails(CustomerEntity customer) {
     state = state.copyWith(customer: customer);
   }

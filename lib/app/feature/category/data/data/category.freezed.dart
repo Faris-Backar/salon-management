@@ -176,11 +176,7 @@ class _$CategoryImpl implements _Category {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'name': name,
-      'isActive': isActive,
-    };
+    return {};
   }
 }
 

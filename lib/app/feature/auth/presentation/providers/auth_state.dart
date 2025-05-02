@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:salon_management/app/feature/auth/domain/entities/user_entity.dart';
+
 part 'auth_state.freezed.dart';
 
 @freezed

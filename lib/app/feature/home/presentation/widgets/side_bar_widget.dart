@@ -29,49 +29,71 @@ class SidebarWidget extends StatefulWidget {
 class _SidebarState extends State<SidebarWidget> {
   int selectedIndex = 0;
   int? hoveredIndex;
+  bool isAdmin = false;
 
   final List<Map<String, dynamic>> options = [
     {
       AppStrings.icon: Assets.icons.home1,
       AppStrings.title: AppStrings.home,
       AppStrings.path: AppRouter.homeScreen,
+      AppStrings.isAdminOnly: false,
     },
     {
       AppStrings.icon: Assets.icons.transaction,
       AppStrings.title: AppStrings.transactions,
       AppStrings.path: AppRouter.transactionScreen,
+      AppStrings.isAdminOnly: false,
     },
     {
       AppStrings.icon: Assets.icons.user,
       AppStrings.title: AppStrings.employees,
       AppStrings.path: AppRouter.employeeScreen,
+      AppStrings.isAdminOnly: true,
     },
     {
       AppStrings.icon: Assets.icons.team,
       AppStrings.title: AppStrings.customers,
       AppStrings.path: AppRouter.customerScreen,
+      AppStrings.isAdminOnly: false,
     },
     {
       AppStrings.icon: Assets.icons.haircut,
       AppStrings.title: AppStrings.services,
       AppStrings.path: AppRouter.serviceScreen,
+      AppStrings.isAdminOnly: false,
     },
     {
       AppStrings.icon: Assets.icons.category,
       AppStrings.title: AppStrings.categories,
       AppStrings.path: AppRouter.categoryScreen,
+      AppStrings.isAdminOnly: false,
     },
     {
       AppStrings.icon: Assets.icons.report,
       AppStrings.title: AppStrings.reports,
       AppStrings.path: AppRouter.reportScreen,
+      AppStrings.isAdminOnly: true,
     },
     {
       AppStrings.icon: Assets.icons.setting,
       AppStrings.title: AppStrings.settings,
       AppStrings.path: AppRouter.settings,
+      AppStrings.isAdminOnly: false,
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAdminStatus();
+  }
+
+  Future<void> _checkAdminStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isAdmin = prefs.getBool('Is_Admin') ?? false;
+    });
+  }
 
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
@@ -108,6 +130,11 @@ class _SidebarState extends State<SidebarWidget> {
             child: ListView.builder(
               itemCount: options.length,
               itemBuilder: (context, index) {
+                if (options[index][AppStrings.isAdminOnly] == true &&
+                    !isAdmin) {
+                  return const SizedBox.shrink();
+                }
+
                 final isHovered = hoveredIndex == index;
                 final isSelected = selectedIndex == index;
                 return MouseRegion(
@@ -119,9 +146,6 @@ class _SidebarState extends State<SidebarWidget> {
                       setState(() {
                         selectedIndex = index;
                       });
-                      // if (!Responsive.isDesktop()) {
-                      //   context.router.popForced();
-                      // }
                       context.router.pushNamed(options[index][AppStrings.path]);
                     },
                     child: Container(
