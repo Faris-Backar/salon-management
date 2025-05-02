@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +32,12 @@ class AuthRepositoryImpl extends AuthRepository {
 
         if (userDocument.exists) {
           final user = UserModel.fromMap(userDocument.data() ?? {});
-          return right(user);
+          log("logged in user: $user");
+          if (user.isActive) {
+            return right(user);
+          } else {
+            return left(const UserDisabledFailure());
+          }
         }
         return left(const UserNotFoundFailure());
       }

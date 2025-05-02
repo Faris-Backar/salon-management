@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:salon_management/app/core/app_core.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/core/resources/pref_resources.dart';
 import 'package:salon_management/app/core/routes/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _checkAdminStatus() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isAdmin = prefs.getBool('Is_Admin') ?? false;
+      isAdmin = prefs.getBool(PrefResources.isAdmin) ?? false;
       log("is Admin $isAdmin");
     });
   }
@@ -52,20 +53,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 trailing: const Icon(Icons.arrow_forward_ios_rounded),
                 onTap: () {
                   context.router.pushNamed(AppRouter.shopDetails);
-                },
-              ),
-            ],
-            if (isAdmin) ...[
-              const SizedBox(height: 8),
-              ListTile(
-                tileColor: context.colorScheme.surfaceContainerHighest,
-                title: const Text('Reports'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                onTap: () {
-                  context.router.pushNamed(AppRouter.reportScreen);
                 },
               ),
             ],

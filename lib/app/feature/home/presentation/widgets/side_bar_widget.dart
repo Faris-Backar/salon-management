@@ -1,11 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
+import 'package:salon_management/app/core/resources/pref_resources.dart';
 import 'package:salon_management/app/core/routes/app_router.dart';
 import 'package:salon_management/app/core/utils/responsive.dart';
 import 'package:salon_management/app/feature/widgets/svg_icon.dart';
@@ -27,7 +30,7 @@ class SidebarWidget extends StatefulWidget {
 }
 
 class _SidebarState extends State<SidebarWidget> {
-  int selectedIndex = 0;
+  int? selectedIndex;
   int? hoveredIndex;
   bool isAdmin = false;
 
@@ -86,21 +89,61 @@ class _SidebarState extends State<SidebarWidget> {
   void initState() {
     super.initState();
     _checkAdminStatus();
+    _updateSelectedIndex();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateSelectedIndex();
+  }
+
+  void _updateSelectedIndex() {
+    final currentPath = context.router.currentPath;
+    selectedIndex = options.indexWhere((option) {
+      final path = option[AppStrings.path] as String;
+      return currentPath.endsWith(path);
+    });
+    if (selectedIndex == -1) selectedIndex = null;
   }
 
   Future<void> _checkAdminStatus() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isAdmin = prefs.getBool('Is_Admin') ?? false;
+      isAdmin = prefs.getBool(PrefResources.isAdmin) ?? false;
+      log("isAdmin: $isAdmin");
     });
   }
 
   Future<void> _logout() async {
-    await FirebaseAuth.instance.signOut();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    if (context.mounted) {
-      context.router.replaceNamed(AppRouter.loginScreen);
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Logout'),
+        content: Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: Text('Logout'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout ?? false) {
+      await FirebaseAuth.instance.signOut();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      if (context.mounted) {
+        context.router.replaceNamed(AppRouter.loginScreen);
+      }
     }
   }
 

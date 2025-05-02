@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/core/resources/pref_resources.dart';
@@ -21,6 +23,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       result
           .fold((failure) => state = AuthState.error(message: failure.message),
               (user) async {
+        log("logged in user from auth notifier: $user");
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool(PrefResources.isAuthenticated, true);
         await prefs.setString(PrefResources.userId, user.id);
