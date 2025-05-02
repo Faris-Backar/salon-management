@@ -287,6 +287,7 @@ class _CustomerDetailsScreenState extends ConsumerState<CustomerDetailsScreen> {
               value,
               style: TextStyle(
                 fontSize: 16,
+                color: Colors.black,
               ),
             ),
           ],

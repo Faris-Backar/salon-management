@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:salon_management/gen/assets.gen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/feature/cart/presentation/notifiers/cart/cart_notifier.dart';
@@ -18,18 +21,12 @@ import 'package:salon_management/app/feature/widgets/primary_button.dart';
 
 class BillSection extends ConsumerStatefulWidget {
   final List<ServiceItemEntity> selectedServices;
-  final String customerName;
-  final String customerPhoneNumber;
-  final String employeeName;
   final double totalAmount;
   final VoidCallback onClearBill;
   final Function(double, String) onCheckout;
 
   const BillSection({
     required this.selectedServices,
-    required this.customerName,
-    required this.customerPhoneNumber,
-    required this.employeeName,
     required this.totalAmount,
     required this.onClearBill,
     required this.onCheckout,
@@ -43,7 +40,9 @@ class BillSection extends ConsumerStatefulWidget {
 class _BillSectionState extends ConsumerState<BillSection> {
   final TextEditingController _amountController = TextEditingController();
   String _selectedPaymentMethod = "CASH";
-
+  String? selectedCustomerName;
+  String? selectedCustomerPhone;
+  CustomerEntity? selectedCustomer;
   @override
   void initState() {
     super.initState();
@@ -52,11 +51,10 @@ class _BillSectionState extends ConsumerState<BillSection> {
 
   void _showCheckoutDialog(BuildContext context) {
     bool sendToWhatsApp = false;
-    String? selectedCustomerName;
-    String? selectedCustomerPhone;
-
-    TextEditingController amountController =
+    final TextEditingController mobileController = TextEditingController();
+    final TextEditingController amountController =
         TextEditingController(text: widget.totalAmount.toStringAsFixed(2));
+    String customerNameLabel = "";
 
     showDialog(
       context: context,
@@ -80,45 +78,57 @@ class _BillSectionState extends ConsumerState<BillSection> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text("Select Customer:"),
-                    GestureDetector(
-                      onTap: () =>
-                          _showCustomerSelectionSheet(context, (customer) {
-                        setDialogState(() {
-                          selectedCustomerName = customer.name;
-                          selectedCustomerPhone = customer.mobileNumber;
-                          ref
-                              .read(cartNotifierProvider.notifier)
-                              .setCustomerDetails(customer);
-                        });
-                      }),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: context.colorScheme.primary),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              selectedCustomerName ??
-                                  "Select Customer (or Guest)",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: selectedCustomerName != null
-                                    ? context.colorScheme.onSurface
-                                    : context.colorScheme.outline,
-                              ),
-                            ),
-                            const Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
+                    const Text("Customer Mobile Number:"),
+                    TextField(
+                      controller: mobileController,
+                      keyboardType: TextInputType.phone,
+                      maxLength: 10,
+                      onChanged: (value) async {
+                        if (value.length == 10) {
+                          final customers = await ref
+                              .read(customerNotifierProvider.notifier)
+                              .searchCustomerByPhone(value);
+                          setDialogState(() {
+                            if (customers.isNotEmpty) {
+                              customerNameLabel =
+                                  "Existing Customer: ${customers.first.name}";
+                              selectedCustomer = customers.firstOrNull;
+                              final cartState =
+                                  ref.read(cartNotifierProvider.notifier);
+                              if (selectedCustomer != null) {
+                                cartState.setCustomerDetails(selectedCustomer!);
+                              }
+                            } else {
+                              customerNameLabel = "New Customer";
+                              selectedCustomer = null;
+                            }
+                          });
+                        } else {
+                          setDialogState(() {
+                            customerNameLabel = "";
+                            selectedCustomerName = null;
+                          });
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Enter mobile number",
+                        counterText: "",
                       ),
                     ),
+                    if (customerNameLabel.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          customerNameLabel,
+                          style: TextStyle(
+                            color: customerNameLabel.startsWith("Existing")
+                                ? context.colorScheme.primary
+                                : context.colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 16),
                     const Text("Payment Method:"),
                     Row(
@@ -203,21 +213,52 @@ class _BillSectionState extends ConsumerState<BillSection> {
                   child: const Text("Cancel"),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     double enteredAmount =
                         double.tryParse(amountController.text) ??
                             widget.totalAmount;
-                    String finalCustomerName = selectedCustomerName ?? "Guest";
-                    String finalCustomerPhone = selectedCustomerPhone ?? "N/A";
+                    String mobileNumber = mobileController.text.trim();
 
+                    if (mobileNumber.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Please enter mobile number")),
+                      );
+                      return;
+                    }
+                    log("customer selected $selectedCustomer");
+                    if (selectedCustomer == null) {
+                      selectedCustomer = CustomerEntity(
+                        uid: const Uuid().v8(),
+                        name: "Guest",
+                        mobileNumber: mobileNumber,
+                        address: "",
+                      );
+                      await ref
+                          .read(customerNotifierProvider.notifier)
+                          .createcustomer(customer: selectedCustomer!);
+                    }
+
+                    // Set customer details in cart state
+                    log("Setting customer in cart: $selectedCustomer");
+                    ref
+                        .read(cartNotifierProvider.notifier)
+                        .setCustomerDetails(selectedCustomer!);
+
+                    // Verify customer was set
+                    final cartState = ref.read(cartNotifierProvider);
+                    log("Cart state after setting customer: ${cartState.customer}");
+
+                    // Close dialog first to trigger rebuild
+                    Navigator.pop(context);
+
+                    // Then process checkout
                     widget.onCheckout(enteredAmount, _selectedPaymentMethod);
 
                     if (sendToWhatsApp) {
-                      _sendBillToWhatsApp(
-                          enteredAmount, finalCustomerName, finalCustomerPhone);
+                      _sendBillToWhatsApp(enteredAmount,
+                          selectedCustomer?.name ?? "Guest", mobileNumber);
                     }
-
-                    Navigator.pop(context);
                   },
                   child: const Text("Checkout"),
                 ),
@@ -258,91 +299,12 @@ class _BillSectionState extends ConsumerState<BillSection> {
     );
   }
 
-  void _showCustomerSelectionSheet(
-      BuildContext context, Function(CustomerEntity) onSelect) {
-    ref.read(customerNotifierProvider.notifier).fetchcustomer();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.colorScheme.surfaceBright,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return Consumer(
-          builder: (context, ref, child) {
-            final customerState = ref.watch(customerNotifierProvider);
-
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Select Customer",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  customerState.maybeWhen(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    failed: (error) => Center(child: Text("Error: $error")),
-                    customerFetched: (employeeList) => Column(
-                      children: [
-                        // Search bar
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              hintText: "Search Customer...",
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.search),
-                            ),
-                            onChanged: (query) {
-                              ref
-                                  .read(customerNotifierProvider.notifier)
-                                  .searchCustomer(query);
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 300,
-                          child: ListView.builder(
-                            itemCount: employeeList.length,
-                            itemBuilder: (context, index) {
-                              final customer = employeeList[index];
-                              return ListTile(
-                                title: Text(customer.name),
-                                subtitle: Text(customer.mobileNumber),
-                                onTap: () {
-                                  onSelect(customer);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    orElse: () =>
-                        const Center(child: Text("Something went wrong")),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   void _sendBillToWhatsApp(
       double amount, String customerName, String customerPhone) async {
     final shopDetails = ref.read(shopDetailsStreamProvider).value;
 
     try {
+      // Format the message
       final message = """
 *${shopDetails?.name ?? 'My Salon'}*
 ${shopDetails?.address ?? ''}
@@ -353,6 +315,7 @@ ${shopDetails?.email?.isNotEmpty == true ? 'Email: ${shopDetails?.email}\n' : ''
 *Invoice #TEMP*
 Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}
 Customer: $customerName
+Mobile: $customerPhone
 
 *Items:*
 ${widget.selectedServices.asMap().entries.map((entry) => "${entry.value.name}: ₹${entry.value.price}").join("\n")}
@@ -364,22 +327,40 @@ Thank you for your business!
 Visit us again soon.
 """;
 
-      String url =
-          "https://wa.me/${customerPhone != 'N/A' ? customerPhone : shopDetails?.mobileNumber ?? ''}?text=${Uri.encodeComponent(message)}";
+      // Format the phone number
+      String phoneNumber = customerPhone;
+      // Remove any non-digit characters
+      phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d+]'), '');
+      // Add country code if not present
+      if (!phoneNumber.startsWith('+')) {
+        phoneNumber = '91$phoneNumber'; // Add Indian country code
+      }
+      // Remove + if present
+      phoneNumber = phoneNumber.replaceAll('+', '');
 
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      final url = Uri.parse(
+          "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
+
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Could not open WhatsApp")),
+            const SnackBar(
+              content: Text(
+                  "Could not open WhatsApp. Please make sure WhatsApp is installed."),
+              duration: Duration(seconds: 3),
+            ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error generating WhatsApp message: $e")),
+          SnackBar(
+            content: Text("Error: Unable to open WhatsApp. Please try again."),
+            duration: Duration(seconds: 3),
+          ),
         );
       }
     }
@@ -465,6 +446,10 @@ Visit us again soon.
   @override
   Widget build(BuildContext context) {
     final shopDetailsAsyncValue = ref.watch(shopDetailsStreamProvider);
+    final cartState = ref.watch(cartNotifierProvider);
+    final customerName = cartState.customer?.name ?? "Guest";
+    final customerPhone = cartState.customer?.mobileNumber ?? "N/A";
+    final employeeName = cartState.employee?.fullname ?? "Not Assigned";
 
     return shopDetailsAsyncValue.when(
       data: (shopDetails) {
@@ -492,9 +477,8 @@ Visit us again soon.
                 if (shopDetails.email != null && shopDetails.email!.isNotEmpty)
                   Text("Email: ${shopDetails.email}"),
                 const Divider(thickness: 2),
-                Text(
-                    "Customer: ${widget.customerName} - ${widget.customerPhoneNumber}"),
-                Text("Employee: ${widget.employeeName}"),
+                Text("Customer: $customerName - $customerPhone"),
+                Text("Employee: $employeeName"),
                 const Divider(thickness: 2),
                 const Text("Services:"),
                 Expanded(
@@ -532,7 +516,7 @@ Visit us again soon.
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: context.colorScheme.onSurface
-                                          .withOpacity(0.7),
+                                          .withValues(alpha: 0.7),
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),

@@ -33,7 +33,7 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
     return Scaffold(
       appBar: Responsive.isMobile()
           ? AppBar(
-              title: Text(AppStrings.employees),
+              title: Text(AppStrings.customers),
             )
           : null,
       body: SafeArea(
@@ -130,7 +130,7 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
                           context.back();
                           ref
                               .read(customerNotifierProvider.notifier)
-                              .fetchcustomer();
+                              .fetchCustomer();
                           AppUtils.showSnackBar(context,
                               content: AppStrings.customerCreatedSuccessfully,
                               isForErrorMessage: false);

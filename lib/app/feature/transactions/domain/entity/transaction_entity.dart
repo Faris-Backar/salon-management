@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
 import 'package:salon_management/app/feature/employee/domain/entities/employee_enitity.dart';
 import 'package:salon_management/app/feature/service_items/domain/enitites/service_item_entity.dart';
@@ -87,6 +88,11 @@ class TransactionEntity {
       'expenseCategory': expenseCategory,
       'expenseDescription': expenseDescription,
     };
+  }
+
+  @override
+  String toString() {
+    return 'TransactionEntity(uid: $uid, createdAt: $createdAt, modifiedAt: $modifiedAt, type: $type, paymentMethod: $paymentMethod, amount: $amount, employee: $employee, customer: $customer, discountAmount: $discountAmount, selectedServices: $selectedServices, expenseCategory: $expenseCategory, expenseDescription: $expenseDescription)';
   }
 }
 

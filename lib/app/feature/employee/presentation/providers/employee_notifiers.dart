@@ -55,16 +55,23 @@ class EmployeeNotifier extends StateNotifier<EmployeeState> {
     });
   }
 
-  fetchEmployee() async {
+  fetchEmployee({bool isRefresh = false}) async {
+    if (employeeList.isNotEmpty && !isRefresh) {
+      state = EmployeeState.employeesFetched(employeeList: employeeList);
+      return employeeList;
+    }
+
     state = EmployeeState.initial();
     state = EmployeeState.loading();
+
     final result = await employeeUsecase.getEmployees();
-    result.fold((l) {
+
+    return result.fold((l) {
       state = EmployeeState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
-      employeeList = r;
-      state = EmployeeState.employeesFetched(employeeList: r);
+      employeeList = r; // Update the cache
+      state = EmployeeState.employeesFetched(employeeList: employeeList);
       return r;
     });
   }

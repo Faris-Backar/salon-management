@@ -54,16 +54,24 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
     });
   }
 
-  fetchcustomer() async {
+  fetchCustomer({bool isRefresh = false}) async {
+    if (customers.isNotEmpty && !isRefresh) {
+      state = CustomerState.customerFetched(employeeList: customers);
+      return customers;
+    }
+
     state = CustomerState.initial();
     state = CustomerState.loading();
+
     final result = await customerUsecase.getCustomers();
-    result.fold((l) {
+
+    return result.fold((l) {
       state = CustomerState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
-      customers = r;
+      customers = r; // Update the cache
       state = CustomerState.customerFetched(employeeList: r);
+      return r;
     });
   }
 
@@ -83,5 +91,21 @@ class CustomerNotifier extends StateNotifier<CustomerState> {
     } catch (e) {
       state = CustomerState.failed(error: e.toString());
     }
+  }
+
+  Future<List<CustomerEntity>> searchCustomerByPhone(String phoneNumber) async {
+    // First ensure we have the latest customer data
+    if (customers.isEmpty) {
+      final result = await customerUsecase.getCustomers();
+      result.fold(
+        (l) => [],
+        (r) => customers = r,
+      );
+    }
+
+    // Search for exact phone number match
+    return customers
+        .where((customer) => customer.mobileNumber == phoneNumber)
+        .toList();
   }
 }

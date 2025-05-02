@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/feature/customer/domain/enitites/customer_entity.dart';
 import 'package:salon_management/app/feature/employee/domain/entities/employee_enitity.dart';
@@ -25,7 +27,10 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   void setCustomerDetails(CustomerEntity customer) {
+    log("Setting customer in cart state: $customer");
+    final oldState = state;
     state = state.copyWith(customer: customer);
+    log("Cart state updated - Old customer: ${oldState.customer}, New customer: ${state.customer}");
   }
 
   void setEmployee(EmployeeEntity employee) {

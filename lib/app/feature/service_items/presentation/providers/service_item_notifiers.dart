@@ -55,16 +55,22 @@ class ServiceItemNotifier extends StateNotifier<ServiceItemState> {
     });
   }
 
-  fetchServiceItems() async {
+  fetchServiceItems({bool isRefresh = false}) async {
+    if (serviceItems.isNotEmpty && !isRefresh) {
+      state = ServiceItemState.serviceItemsFetched(serviceItems: serviceItems);
+      return serviceItems;
+    }
     state = ServiceItemState.initial();
     state = ServiceItemState.loading();
+
     final result = await serviceItemUsecase.getServiceItems();
-    result.fold((l) {
+
+    return result.fold((l) {
       state = ServiceItemState.failed(error: l.message);
       return ServerFailure();
     }, (r) {
       r.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      serviceItems = r;
+      serviceItems = r; // Update the cache
       state = ServiceItemState.serviceItemsFetched(serviceItems: r);
       return r;
     });

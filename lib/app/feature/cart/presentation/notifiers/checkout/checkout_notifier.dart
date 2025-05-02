@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salon_management/app/feature/auth/presentation/providers/auth_provider.dart';
 import 'package:salon_management/app/feature/cart/data/repositories/check_out_repository_impl.dart';
@@ -16,6 +18,7 @@ class CheckoutNotifier extends StateNotifier<CheckoutState> {
   Future<void> processCheckout(TransactionEntity bill) async {
     state = const CheckoutState.loading();
     try {
+      log("bill $bill");
       await checkOutUsecase(params: bill);
       state = CheckoutState.success();
     } catch (e) {
