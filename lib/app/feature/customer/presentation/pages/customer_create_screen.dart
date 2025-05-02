@@ -55,7 +55,7 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
                     Row(
                       children: [
                         Text(
-                          AppStrings.employees,
+                          AppStrings.customers,
                           style: context.textTheme.displaySmall
                               ?.copyWith(fontWeight: FontWeight.w500),
                         ),
@@ -146,11 +146,11 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
                       width: double.infinity,
                       child: customerState.maybeMap(
                         loading: (_) => PrimaryButton(
-                            label: AppStrings.createEmployee,
+                            label: "Create Customer",
                             isLoading: true,
                             onPressed: () {}),
                         orElse: () => PrimaryButton(
-                          label: AppStrings.createEmployee,
+                          label: "Create Customer",
                           isLoading: false,
                           onPressed: () {
                             if (_formKey.currentState?.validate() == true) {
