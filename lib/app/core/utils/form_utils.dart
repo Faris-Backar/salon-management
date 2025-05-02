@@ -37,7 +37,13 @@ class FormUtils {
   static String? mobileNumberValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Mobile number is required';
-    } else if (!RegExp(r"^[0-9]{10}$").hasMatch(value)) {
+    }
+
+    // Remove +91 prefix if present for validation
+    final numberToValidate =
+        value.startsWith('+91') ? value.substring(3) : value;
+
+    if (!RegExp(r"^[0-9]{10}$").hasMatch(numberToValidate)) {
       return 'Enter a valid 10-digit mobile number';
     }
     return null;

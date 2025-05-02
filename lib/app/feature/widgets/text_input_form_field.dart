@@ -22,6 +22,7 @@ class TextInputFormField extends StatelessWidget {
       this.maxLines,
       this.autovalidateMode,
       this.onFieldSubmitted,
+      this.prefixText,
       this.enabled = true});
   final String? hint;
   final TextEditingController controller;
@@ -42,6 +43,7 @@ class TextInputFormField extends StatelessWidget {
   final AutovalidateMode? autovalidateMode;
   final Function(String)? onFieldSubmitted;
   final bool enabled;
+  final String? prefixText;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,7 @@ class TextInputFormField extends StatelessWidget {
           contentPadding:
               contentPadding ?? const EdgeInsets.symmetric(horizontal: 16.0),
           prefixIcon: prefixIcon,
+          prefixText: prefixText,
           suffixIcon: suffixIcon,
           fillColor: fillColor ?? context.colorScheme.tertiaryContainer,
           filled: true,

@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? textInputType;
   final int maxLines;
   final bool enabled;
+  final String? prefixText;
   const CustomTextField(
       {super.key,
       required this.label,
@@ -24,6 +25,7 @@ class CustomTextField extends StatelessWidget {
       this.validator,
       this.textInputType,
       this.maxLines = 1,
+      this.prefixText,
       this.enabled = true});
 
   @override
@@ -45,6 +47,7 @@ class CustomTextField extends StatelessWidget {
           validator: validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           maxLines: maxLines,
+          prefixText: prefixText,
           contentPadding: maxLines != 1
               ? EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0)
               : null,

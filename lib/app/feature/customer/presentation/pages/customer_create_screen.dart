@@ -84,6 +84,7 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
                             validator: FormUtils.mobileNumberValidator,
                             textInputType: TextInputType.phone,
                             hint: AppStrings.mobileNumber,
+                            prefixText: '+91 ',
                           ),
                         ),
                       ],
@@ -105,6 +106,7 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
                           validator: FormUtils.mobileNumberValidator,
                           textInputType: TextInputType.phone,
                           hint: AppStrings.mobileNumber,
+                          prefixText: '+91 ',
                         ),
                       ],
                     ),
@@ -156,7 +158,7 @@ class _CustomerCreateScreenState extends State<CustomerCreateScreen> {
                               final customerEntity = CustomerEntity(
                                   uid: uid,
                                   address: _addressController.text,
-                                  mobileNumber: _mobileController.text,
+                                  mobileNumber: '+91${_mobileController.text}',
                                   name: _nameController.text);
                               ref
                                   .read(customerNotifierProvider.notifier)

@@ -87,7 +87,7 @@ class _BillSectionState extends ConsumerState<BillSection> {
                         if (value.length == 10) {
                           final customers = await ref
                               .read(customerNotifierProvider.notifier)
-                              .searchCustomerByPhone(value);
+                              .searchCustomerByPhone('+91$value');
                           setDialogState(() {
                             if (customers.isNotEmpty) {
                               customerNameLabel =
@@ -114,6 +114,7 @@ class _BillSectionState extends ConsumerState<BillSection> {
                         border: OutlineInputBorder(),
                         hintText: "Enter mobile number",
                         counterText: "",
+                        prefixText: '+91 ',
                       ),
                     ),
                     if (customerNameLabel.isNotEmpty)
@@ -231,7 +232,7 @@ class _BillSectionState extends ConsumerState<BillSection> {
                       selectedCustomer = CustomerEntity(
                         uid: const Uuid().v8(),
                         name: "Guest",
-                        mobileNumber: mobileNumber,
+                        mobileNumber: '+91$mobileNumber',
                         address: "",
                       );
                       await ref
