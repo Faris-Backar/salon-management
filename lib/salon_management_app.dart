@@ -13,6 +13,7 @@ class SalonManagementApp extends StatelessWidget {
       designSize: const Size(360, 760),
       builder: (context, child) {
         return MaterialApp.router(
+          title: "Ballozee Saloon",
           debugShowCheckedModeBanner: false,
           routerConfig: _appRouter.config(),
           theme: AppTheme.light,

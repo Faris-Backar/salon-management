@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:salon_management/app/core/app_strings.dart';
 import 'package:salon_management/app/core/extensions/extensions.dart';
 import 'package:salon_management/app/feature/employee/domain/entities/employee_enitity.dart';
 import 'package:salon_management/app/feature/employee/presentation/providers/employee_provider.dart';

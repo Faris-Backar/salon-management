@@ -33,6 +33,10 @@ class AppRouter extends RootStackRouter {
               path: employeeScreen,
             ),
             AutoRoute(
+              page: CreateEmployeeRoute.page,
+              path: employeeScreen,
+            ),
+            AutoRoute(
               page: CustomerRoute.page,
               path: customerScreen,
             ),
@@ -95,6 +99,7 @@ class AppRouter extends RootStackRouter {
   static const String shopDetails = 'shop-details';
   static const String registerScreen = '/register';
   static const String registeredUsers = 'registered-users';
+  static const String createEmployee = "createEmployee";
 }
 
 class AuthGuard extends AutoRouteGuard {
